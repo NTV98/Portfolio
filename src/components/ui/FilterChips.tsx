@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
+import { basePath } from "@/lib/base-path";
 import { cn } from "@/lib/cn";
 
 export type FilterOption = { value: string; label: string };
@@ -16,7 +17,9 @@ export function useUrlFilter(): [string, (value: string) => void] {
     else sp.delete("f");
     const qs = sp.toString();
     // Native history API: Next syncs useSearchParams without a server round-trip.
-    window.history.replaceState(null, "", qs ? `${pathname}?${qs}` : pathname);
+    // usePathname() omits basePath (GitHub Pages "/Portfolio"); the History API needs the full URL.
+    const url = `${basePath}${pathname}`;
+    window.history.replaceState(null, "", qs ? `${url}?${qs}` : url);
   };
   return [filter, set];
 }

@@ -35,3 +35,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# GitHub Pages static build (scripts/build-pages.mjs)
+.pages-backup/

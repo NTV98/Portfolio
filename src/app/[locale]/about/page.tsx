@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { asset } from "@/lib/base-path";
 import Image from "next/image";
 import { profile } from "@/config/profile";
 import { localePath } from "@/i18n/config";
@@ -30,7 +31,7 @@ export default async function AboutPage() {
           <div aria-hidden className="absolute -top-25 -right-25 size-90 rounded-full bg-accent opacity-75" />
           {profile.avatar ? (
             <Image
-              src={profile.avatar.src}
+              src={asset(profile.avatar.src)}
               width={profile.avatar.width}
               height={profile.avatar.height}
               alt={interpolate(a.portraitAlt, { name: profile.name })}

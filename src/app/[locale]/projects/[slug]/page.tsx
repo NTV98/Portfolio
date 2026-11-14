@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { asset } from "@/lib/base-path";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -146,11 +147,11 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proje
               controls
               preload="metadata"
               playsInline
-              poster={pub.video.poster}
+              poster={pub.video.poster && asset(pub.video.poster)}
               aria-label={pub.video.title[locale]}
               className="aspect-video w-full"
             >
-              <source src={pub.video.src} type={pub.video.type} />
+              <source src={asset(pub.video.src)} type={pub.video.type} />
               {d.videoFallback}
             </video>
             <figcaption className="px-6 py-4 text-sm text-code-muted">{pub.video.title[locale]}</figcaption>
@@ -181,7 +182,7 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proje
                 <li key={shot.src}>
                   <figure className="flex flex-col gap-3">
                     <Image
-                      src={shot.src}
+                      src={asset(shot.src)}
                       alt={shot.alt[locale]}
                       width={shot.width}
                       height={shot.height}

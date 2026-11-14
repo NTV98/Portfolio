@@ -83,4 +83,7 @@
 | 2026-11-14 | Node script | Tương phản WCAG 6 bảng màu | PASS — mọi cặp chữ ≥ 5.2:1 (DESIGN_SYSTEM §3.2) |
 | 2026-11-14 | Chụp màn hình Playwright 1440/390px (violet, light, teal, orange) | So sánh trực quan với mockup | Khớp bố cục; đã sửa lỗi viền nút ghost bị `tailwind-merge` xoá (`border-bold` → `edge-bold`). Chờ chủ dự án duyệt. |
 
+| 2026-11-14 | UI v2.1–2.2 (18 bảng màu, nút ngôn ngữ tròn, avatar, 6 dự án mẫu có ảnh/video, form mailto bật, Zalo) | typecheck · lint · `vitest` · build · `playwright` | PASS — lint 0 cảnh báo; 22 unit test; build SSG; 20/20 E2E (thêm: log console khi chọn màu, form liên hệ hiển thị khi có email, video chỉ ở dự án PUBLIC). axe đã bắt và sửa 1 lỗi tương phản thật (chú thích video trên nền code ở giao diện sáng → `text-code-muted`, 5.9:1). |
+| 2026-11-14 | Node script | Tương phản 12 bảng màu mới | PASS — mọi cặp chữ ≥ 5.0:1 (DESIGN_SYSTEM §3.2) |
+
 Chưa đo Lighthouse cho UI v2.

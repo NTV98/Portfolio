@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { asset } from "@/lib/base-path";
 import "./globals.css";
 import { fontVariables } from "./fonts";
 import { themeScript } from "@/components/layout/theme";
@@ -30,7 +31,7 @@ export default function GlobalNotFound() {
                 <Heading className="text-title">{t.notFound.title}</Heading>
                 <p className="text-body-md text-fg-muted">{t.notFound.body}</p>
                 <a
-                  href={href}
+                  href={asset(href)}
                   className="btn-motion inline-flex min-h-13 items-center rounded-full bg-accent px-7 font-semibold text-on-accent"
                 >
                   {t.notFound.home}

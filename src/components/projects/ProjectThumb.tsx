@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { asset } from "@/lib/base-path";
 import Image from "next/image";
 import { cn } from "@/lib/cn";
 
@@ -62,7 +63,7 @@ export function ProjectThumb({
       <div className={frame} aria-hidden={lg ? undefined : true}>
         <div className="thumb-inner absolute inset-0">
           <Image
-            src={image.src}
+            src={asset(image.src)}
             alt={lg ? image.alt : ""}
             fill
             priority={priority}

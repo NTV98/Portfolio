@@ -5,6 +5,9 @@ import { getProjectSlugs } from "@/lib/content/projects";
 import { getPostSlugs } from "@/lib/content/posts";
 import { absoluteUrl } from "@/lib/seo";
 
+/** Generated once at build time (required by the GitHub Pages static export). */
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     ...staticRoutes,

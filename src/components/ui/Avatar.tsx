@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/base-path";
 import { profile } from "@/config/profile";
 import { cn } from "@/lib/cn";
 
@@ -30,7 +31,7 @@ export function Avatar({ size = "sm", alt = "", className }: { size?: keyof type
   return (
     <span className={cn("relative flex-none overflow-hidden rounded-full ring-2 ring-accent", s.box, className)}>
       <Image
-        src={profile.avatar.src}
+        src={asset(profile.avatar.src)}
         alt={alt}
         width={s.px * 2}
         height={Math.round((s.px * 2 * profile.avatar.height) / profile.avatar.width)}
