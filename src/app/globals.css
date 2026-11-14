@@ -1,0 +1,303 @@
+/* =============================================================================
+   GLOBAL CSS — Tailwind v4 entry (see Docs/DESIGN_SYSTEM.md)
+   Status: DRAFT v0.1 — pending owner approval.
+
+   Contents
+   1. Imports & theme variant
+   2. Base (document, typography defaults, focus, selection, motion)
+   3. Layout utilities   — container-*, section, page-top, stack-title
+   4. Bento Grid         — bento, bento-1x1 … bento-4x1 (mobile → tablet → desktop)
+   5. Helper utilities   — eyebrow, tap-target, stretched-link, duration-*, z-*
+   6. Code highlighting  — Shiki dual theme (light/dark)
+
+   Rule: add nothing here without a matching DESIGN_SYSTEM.md entry.
+   ============================================================================= */
+
+/* 1. Imports ---------------------------------------------------------------- */
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* `dark:` follows the class set by next-themes. Rarely needed: color tokens
+   already switch through light-dark(). Use only for non-color differences. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 2. Base ------------------------------------------------------------------- */
+@layer base {
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 100%;                    /* respect user font-size settings */
+    line-height: 1.65;
+    -webkit-text-size-adjust: 100%;     /* no auto-zoom text on iOS rotate */
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1rem); /* anchors clear sticky header */
+    scrollbar-gutter: stable;           /* no layout shift when scrollbar appears */
+    tab-size: 4;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  body {
+    min-height: 100dvh;                 /* dynamic viewport: correct on mobile browsers */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg);
+    /* Notch / home-indicator safe areas (iOS landscape, Android gesture bar) */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  main { flex: 1 0 auto; }
+
+  /* Headings: semantic level is decoupled from visual size (use text-h1 …). */
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+    line-height: var(--leading-tight);  /* never below 1.15 — VI diacritics */
+  }
+  p, li, dd, blockquote { text-wrap: pretty; }
+
+  /* Long URLs, identifiers, code never cause horizontal overflow. */
+  a, code, kbd, samp { overflow-wrap: anywhere; }
+
+  img, svg, video, canvas, iframe {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  hr { border-color: var(--color-border); }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-fg);
+  }
+
+  /* Focus: always visible for keyboard users, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Form controls inherit typography; 16px min stops iOS zoom-on-focus. */
+  input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+  }
+  input, textarea, select { font-size: max(1rem, 16px); }
+
+  /* Respect reduced motion everywhere (tokens already zero the durations). */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* 3. Layout utilities ------------------------------------------------------- */
+
+/* Page container: 1152px max, gutter 16 → 24 (md) → 32 (lg). */
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* Wide container: home bento / project gallery only (DESIGN_SYSTEM §6). */
+@utility container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* Prose container: 68ch reading measure. */
+@utility container-prose {
+  width: 100%;
+  max-width: calc(var(--container-measure) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Section vertical rhythm: 64 → 80 (md) → 96 (lg). */
+@utility section {
+  padding-block: var(--section-y);
+}
+/* First block under the sticky header: 48 → 64 → 80. */
+@utility page-top {
+  padding-top: var(--page-top);
+}
+/* Section title → content spacing: 32 → 40. */
+@utility stack-title {
+  margin-bottom: var(--stack-title);
+}
+/* Card padding: 20 → 24. */
+@utility card-pad {
+  padding: var(--card-pad);
+}
+/* Grid gap shared by bento & card lists: 16 → 24. */
+@utility gap-grid {
+  gap: var(--grid-gap);
+}
+
+/* Standard card list: 1 col (mobile) → 2 (tablet) → 3 (desktop). */
+@utility grid-cards {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: minmax(0, 1fr);
+  @media (min-width: 48rem) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (min-width: 64rem) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* 4. Bento Grid -------------------------------------------------------------
+   1 col (mobile) → 2 col (tablet ≥ 768) → 4 col (desktop ≥ 1024).
+   DOM order = reading order = mobile order. Rows must close at desktop.
+   Cell sizes per DESIGN_SYSTEM §7.1:
+
+            mobile    tablet (2 col)     desktop (4 col)
+   1x1      full      1 col              1 col × 1 row
+   2x1      full      2 col              2 col × 1 row
+   1x2      full      1 col × 2 rows     1 col × 2 rows
+   2x2      full      2 col              2 col × 2 rows
+   4x1      full      2 col              4 col (full row)
+   ------------------------------------------------------------------------- */
+@utility bento {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: var(--bento-row);
+  grid-auto-flow: row;  /* never `dense`: it reorders visually vs DOM */
+  @media (min-width: 48rem) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (min-width: 64rem) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@utility bento-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+@utility bento-2x1 {
+  grid-column: span 1;
+  @media (min-width: 48rem) { grid-column: span 2; }
+}
+@utility bento-1x2 {
+  grid-column: span 1;
+  @media (min-width: 48rem) { grid-row: span 2; }
+}
+@utility bento-2x2 {
+  grid-column: span 1;
+  @media (min-width: 48rem) { grid-column: span 2; }
+  @media (min-width: 64rem) { grid-row: span 2; }
+}
+@utility bento-4x1 {
+  grid-column: span 1;
+  @media (min-width: 48rem) { grid-column: span 2; }
+  @media (min-width: 64rem) { grid-column: span 4; }
+}
+
+/* Cell surface — identical across all cells (radius, border, padding, bg). */
+@utility bento-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;  /* allow text to wrap inside grid tracks */
+  padding: var(--card-pad);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+/* Interactive cell / card hover — pointer devices only (no sticky hover on touch). */
+@utility card-interactive {
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+  }
+  &:has(:focus-visible) {
+    border-color: var(--color-accent);
+  }
+}
+
+/* 5. Helper utilities ------------------------------------------------------- */
+
+/* Eyebrow label: mono, uppercase, xs — e.g. "01 / PROJECTS". */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Minimum 44×44 touch target for icon buttons, nav items, chips. */
+@utility tap-target {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+}
+
+/* Whole-card link: put on the single <a> inside a relative card. */
+@utility stretched-link {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-raised);
+    border-radius: inherit;
+  }
+}
+
+/* Sticky header offset for mobile safe area (notch). */
+@utility header-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+@utility duration-fast { transition-duration: var(--duration-fast); }
+@utility duration-base { transition-duration: var(--duration-base); }
+@utility duration-slow { transition-duration: var(--duration-slow); }
+
+@utility z-raised   { z-index: var(--z-raised); }
+@utility z-header   { z-index: var(--z-header); }
+@utility z-dropdown { z-index: var(--z-dropdown); }
+@utility z-overlay  { z-index: var(--z-overlay); }
+@utility z-modal    { z-index: var(--z-modal); }
+@utility z-toast    { z-index: var(--z-toast); }
+@utility z-skip     { z-index: var(--z-skip); }
+
+/* 6. Code highlighting (Shiki dual theme via rehype-pretty-code) ------------ */
+@layer components {
+  pre[data-theme],
+  code[data-theme] {
+    background-color: var(--color-surface-muted);
+  }
+  pre[data-theme] {
+    overflow-x: auto;              /* code scrolls inside its box, page never does */
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+  [data-theme] span {
+    color: light-dark(var(--shiki-light), var(--shiki-dark));
+  }
+}
