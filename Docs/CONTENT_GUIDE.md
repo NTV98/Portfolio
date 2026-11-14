@@ -7,21 +7,40 @@
 | Nội dung | File | Ghi chú |
 |---|---|---|
 | URL site, tên, ngôn ngữ mặc định, đường dẫn CV, chế độ liên hệ | `src/config/site.ts` | |
-| Họ tên, chức danh, giới thiệu, avatar, địa điểm, trạng thái sẵn sàng | `src/config/profile.ts` | Văn bản `Localized` |
-| Email & mạng xã hội | `src/config/social.ts` | Chỉ link đã cấu hình mới hiển thị |
-| Điều hướng | `src/config/navigation.ts` | Nhãn lấy từ `messages/*.json` |
-| Dự án | `src/data/projects.ts` | Xem §3 |
-| Kỹ năng | `src/data/skills.ts` | Nhóm + tên + slug icon — **không có mức độ** |
+| Họ tên, chữ cái logo (`monogram`), chức danh, dòng hero (`headline`), giới thiệu, trạng thái sẵn sàng, địa điểm, avatar, tóm tắt kinh nghiệm, câu giới thiệu mã nguồn mở, các đoạn trang About | `src/config/profile.ts` | Văn bản `Localized` |
+| Email, điện thoại/Zalo, GitHub, LinkedIn, Facebook | `src/config/social.ts` | Để `undefined` hoặc `[PLACEHOLDER]` ⇒ không hiển thị; email placeholder ⇒ ẩn form liên hệ |
+| Điều hướng | `src/config/navigation.ts` | Nhãn lấy từ `src/messages/*.ts` |
+| Dự án | `src/data/projects.ts` | Xem §3. Trường `outcome` (Kết quả) chỉ ghi số liệu/phản hồi thật |
+| Kỹ năng | `src/data/skills.ts` | 4 nhóm `backend`, `frontend`, `tools`, `practices`; `tone` 1–6 = màu chấm; mục là chuỗi (tên công nghệ) hoặc `{ vi, en }` — **không có mức độ** |
+| Code card hero, thẻ Công nghệ (Backend/Frontend), "Mình có thể giúp bạn", "Cách mình làm việc" | `src/data/highlights.ts` | Validate bằng Zod trong `src/lib/content/highlights.ts` |
 | Kinh nghiệm | `src/data/experience.ts` | |
-| Học vấn / chứng chỉ | `src/data/education.ts`, `certifications.ts` | |
+| Học vấn / chứng chỉ | `src/data/education.ts` | Hiển thị ở trang Kỹ năng ("Chứng chỉ và học tập") và Resume |
 | Bài viết | `src/content/blog/<slug>/vi.mdx`, `en.mdx` | Một hoặc cả hai ngôn ngữ |
-| Chữ giao diện | `src/messages/vi.json`, `en.json` | Chỉ chữ của giao diện |
-| Ảnh | `public/images/{profile,projects/<slug>,blog/<slug>}` | |
-| CV | `public/files/cv-vi.pdf`, `cv-en.pdf` | Thiếu file ⇒ trạng thái chưa cấu hình |
+| Chữ giao diện | `src/messages/vi.ts`, `en.ts` | Chỉ chữ của giao diện; hai file phải cùng bộ khoá (có unit test) |
+| Ảnh | `public/assets/images/{profile,projects/<slug>,og}` | Thumbnail dự án là minh hoạ tự sinh, không cần ảnh |
+| CV | `public/assets/files/cv-vi.pdf`, `cv-en.pdf` | Thiếu file ⇒ trạng thái chưa cấu hình |
 
 ## 2. Placeholder
 
-Mọi thông tin chưa biết ghi dạng `"[PLACEHOLDER] mô tả ngắn"`. Placeholder hiện badge ở dev; build production với `STRICT_CONTENT=true` sẽ thất bại nếu còn placeholder. Không bao giờ thay placeholder bằng thông tin bịa.
+Hai loại nội dung chưa hoàn thiện:
+
+| Loại | Cách đánh dấu | Khi nào dùng |
+|---|---|---|
+| Placeholder | chuỗi `"[PLACEHOLDER] mô tả ngắn"` (hiển thị nguyên văn) | Chưa có nội dung, cần nhắc chủ dự án điền |
+| **Nội dung mẫu** | comment `// @sample` trên dòng/khối (hoặc trong JSDoc của file) | Chủ dự án yêu cầu điền sẵn nội dung giả để xem bố cục (2026-11-14) — văn bản, ảnh "ẢNH MẪU", video mẫu |
+
+- `npm run check:content` liệt kê mọi `[PLACEHOLDER]` và `@sample`. Trước khi public, chạy với `STRICT_CONTENT=true` → **thất bại** nếu còn bất kỳ mục nào.
+- Nội dung mẫu không dùng tên công ty/trường/chứng chỉ có thật; tên tổ chức dùng mô tả chung.
+- Thay nội dung mẫu xong → xoá comment `@sample` tương ứng.
+- Không bao giờ để thông tin bịa lên production.
+
+### Ảnh, video dự án
+- `cover` (16:10, 1600×1000, WebP) — hiển thị trên card và đầu trang chi tiết. Dự án PRIVATE: chỉ minh hoạ chung.
+- `screenshots[]` và `video` (`{ src, type: "video/webm" | "video/mp4", poster, title }`) — **chỉ PUBLIC**. Đặt file ở `public/assets/images/projects/<slug>/` và `public/assets/videos/`. Video nên ≤ 10 MB, có poster.
+
+### Liên hệ
+- `social.email` có giá trị thật ⇒ form liên hệ (mailto) được bật.
+- `social.zalo` = số điện thoại Zalo (vd `"0912345678"`) ⇒ hiện nút "Nhắn Zalo" (link `https://zalo.me/<số>`). `social.phone` ⇒ hiện số + link gọi.
 
 ## 3. Thêm một dự án
 

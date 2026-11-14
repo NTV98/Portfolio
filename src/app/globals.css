@@ -1,14 +1,15 @@
 /* =============================================================================
    GLOBAL CSS — Tailwind v4 entry (see Docs/DESIGN_SYSTEM.md)
-   Status: DRAFT v0.1 — pending owner approval.
+   Version 2.0 — rebuilt from Docs/DesignUI/Portfolio-html/Main.dc.html.
 
    Contents
-   1. Imports & theme variant
-   2. Base (document, typography defaults, focus, selection, motion)
-   3. Layout utilities   — container-*, section, page-top, stack-title
-   4. Bento Grid         — bento, bento-1x1 … bento-4x1 (mobile → tablet → desktop)
-   5. Helper utilities   — eyebrow, tap-target, stretched-link, duration-*, z-*
-   6. Code highlighting  — Shiki dual theme (light/dark)
+   1. Imports
+   2. Base (document, typography, focus, forms)
+   3. Layout utilities   — container-page, page-top, section-gap
+   4. Component classes  — panel, chip, field, eyebrow, nav-link, icon-btn …
+   5. Motion             — page rise, hero art, timeline, code card, live dot
+   6. Article prose + code highlighting (blog)
+   7. Print (resume)
 
    Rule: add nothing here without a matching DESIGN_SYSTEM.md entry.
    ============================================================================= */
@@ -17,26 +18,23 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-/* `dark:` follows the class set by next-themes. Rarely needed: color tokens
-   already switch through light-dark(). Use only for non-color differences. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /* 2. Base ------------------------------------------------------------------- */
 @layer base {
   html {
     background-color: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-sans);
-    font-size: 100%;                    /* respect user font-size settings */
-    line-height: 1.65;
-    -webkit-text-size-adjust: 100%;     /* no auto-zoom text on iOS rotate */
+    font-size: 100%;
+    line-height: var(--leading-normal);
+    -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    scroll-padding-top: calc(var(--header-h) + 1rem); /* anchors clear sticky header */
-    scrollbar-gutter: stable;           /* no layout shift when scrollbar appears */
-    tab-size: 4;
+    scroll-padding-top: 1rem;
+    scrollbar-gutter: stable;
+    transition:
+      background-color var(--duration-slow) ease,
+      color var(--duration-slow) ease;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -44,56 +42,55 @@
   }
 
   body {
-    min-height: 100dvh;                 /* dynamic viewport: correct on mobile browsers */
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
     background-color: var(--color-bg);
-    /* Notch / home-indicator safe areas (iOS landscape, Android gesture bar) */
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
 
-  main { flex: 1 0 auto; }
+  /* Hero line art bleeds past the right edge by design — clip it (no scroll container). */
+  main { flex: 1 0 auto; overflow-x: clip; }
 
-  /* Headings: semantic level is decoupled from visual size (use text-h1 …). */
   h1, h2, h3, h4 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
     text-wrap: balance;
-    line-height: var(--leading-tight);  /* never below 1.15 — VI diacritics */
+    overflow-wrap: break-word;
   }
   p, li, dd, blockquote { text-wrap: pretty; }
 
-  /* Long URLs, identifiers, code never cause horizontal overflow. */
   a, code, kbd, samp { overflow-wrap: anywhere; }
 
   img, svg, video, canvas, iframe {
     display: block;
     max-width: 100%;
-    height: auto;
   }
-
-  hr { border-color: var(--color-border); }
+  img, video { height: auto; }
 
   ::selection {
-    background-color: var(--color-accent-soft);
+    background-color: var(--p-glow);
     color: var(--color-fg);
   }
 
-  /* Focus: always visible for keyboard users, never removed. */
+  /* Focus: 3px accent ring, offset 3px (mockup). Never removed. */
   :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+    outline: 3px solid var(--color-accent-text);
+    outline-offset: 3px;
     border-radius: var(--radius-sm);
   }
   :focus:not(:focus-visible) { outline: none; }
 
-  /* Form controls inherit typography; 16px min stops iOS zoom-on-focus. */
   input, textarea, select, button {
     font: inherit;
     color: inherit;
   }
   input, textarea, select { font-size: max(1rem, 16px); }
+  button { cursor: pointer; }
 
-  /* Respect reduced motion everywhere (tokens already zero the durations). */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -102,156 +99,251 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* Lock page scroll while the mobile menu dialog is open. */
+  html:has(dialog[open]) { overflow: hidden; }
 }
 
 /* 3. Layout utilities ------------------------------------------------------- */
 
-/* Page container: 1152px max, gutter 16 → 24 (md) → 32 (lg). */
+/* 1200px container, fluid gutter 20 → 48. */
 @utility container-page {
   width: 100%;
   max-width: var(--container-page);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
-/* Wide container: home bento / project gallery only (DESIGN_SYSTEM §6). */
-@utility container-wide {
-  width: 100%;
-  max-width: var(--container-wide);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-/* Prose container: 68ch reading measure. */
+/* Prose container (blog article, privacy). */
 @utility container-prose {
   width: 100%;
   max-width: calc(var(--container-measure) + 2 * var(--gutter));
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
-
-/* Section vertical rhythm: 64 → 80 (md) → 96 (lg). */
-@utility section {
-  padding-block: var(--section-y);
-}
-/* First block under the sticky header: 48 → 64 → 80. */
+/* First block under the header: 32 → 72. */
 @utility page-top {
   padding-top: var(--page-top);
 }
-/* Section title → content spacing: 32 → 40. */
-@utility stack-title {
-  margin-bottom: var(--stack-title);
-}
-/* Card padding: 20 → 24. */
-@utility card-pad {
-  padding: var(--card-pad);
-}
-/* Grid gap shared by bento & card lists: 16 → 24. */
-@utility gap-grid {
-  gap: var(--grid-gap);
+/* Space above every section after the first: 120 (80 on phones). */
+@utility section-gap {
+  padding-top: var(--section-gap);
 }
 
-/* Standard card list: 1 col (mobile) → 2 (tablet) → 3 (desktop). */
-@utility grid-cards {
-  display: grid;
-  gap: var(--grid-gap);
-  grid-template-columns: minmax(0, 1fr);
-  @media (min-width: 48rem) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (min-width: 64rem) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Auto-fit grids from the mockup: columns appear as space allows, no breakpoints. */
+@utility grid-fit-sm { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15.625rem, 100%), 1fr)); }  /* 250 */
+@utility grid-fit-md { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(21.25rem, 100%), 1fr)); }  /* 340 */
+@utility grid-fit-lg { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 1fr)); }     /* 400 */
+@utility grid-fit-xl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(27.5rem, 100%), 1fr)); }   /* 440 */
+
+/* Large media frame (project detail hero): 320 → 560 tall. */
+@utility media-tall {
+  height: clamp(20rem, 42vw, 35rem);
 }
 
-/* 4. Bento Grid -------------------------------------------------------------
-   1 col (mobile) → 2 col (tablet ≥ 768) → 4 col (desktop ≥ 1024).
-   DOM order = reading order = mobile order. Rows must close at desktop.
-   Cell sizes per DESIGN_SYSTEM §7.1:
+/* 4. Component classes ------------------------------------------------------ */
 
-            mobile    tablet (2 col)     desktop (4 col)
-   1x1      full      1 col              1 col × 1 row
-   2x1      full      2 col              2 col × 1 row
-   1x2      full      1 col × 2 rows     1 col × 2 rows
-   2x2      full      2 col              2 col × 2 rows
-   4x1      full      2 col              4 col (full row)
-   ------------------------------------------------------------------------- */
-@utility bento {
-  display: grid;
-  gap: var(--grid-gap);
-  grid-template-columns: minmax(0, 1fr);
-  grid-auto-rows: var(--bento-row);
-  grid-auto-flow: row;  /* never `dense`: it reorders visually vs DOM */
-  @media (min-width: 48rem) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (min-width: 64rem) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
-@utility bento-1x1 {
-  grid-column: span 1;
-  grid-row: span 1;
-}
-@utility bento-2x1 {
-  grid-column: span 1;
-  @media (min-width: 48rem) { grid-column: span 2; }
-}
-@utility bento-1x2 {
-  grid-column: span 1;
-  @media (min-width: 48rem) { grid-row: span 2; }
-}
-@utility bento-2x2 {
-  grid-column: span 1;
-  @media (min-width: 48rem) { grid-column: span 2; }
-  @media (min-width: 64rem) { grid-row: span 2; }
-}
-@utility bento-4x1 {
-  grid-column: span 1;
-  @media (min-width: 48rem) { grid-column: span 2; }
-  @media (min-width: 64rem) { grid-column: span 4; }
-}
-
-/* Cell surface — identical across all cells (radius, border, padding, bg). */
-@utility bento-cell {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;  /* allow text to wrap inside grid tracks */
-  padding: var(--card-pad);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-surface);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out),
-    transform var(--duration-base) var(--ease-out);
-}
-
-/* Interactive cell / card hover — pointer devices only (no sticky hover on touch). */
-@utility card-interactive {
-  @media (hover: hover) {
-    &:hover {
-      border-color: var(--color-border-strong);
-      box-shadow: var(--shadow-sm);
-      transform: translateY(-2px);
-    }
-  }
-  &:has(:focus-visible) {
-    border-color: var(--color-accent);
-  }
-}
-
-/* 5. Helper utilities ------------------------------------------------------- */
-
-/* Eyebrow label: mono, uppercase, xs — e.g. "01 / PROJECTS". */
+/* Eyebrow: 14px · 600 · uppercase · accent text. */
 @utility eyebrow {
-  font-family: var(--font-mono);
   font-size: var(--text-xs);
   line-height: var(--text-xs--line-height);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
-  color: var(--color-fg-subtle);
-  font-variant-numeric: tabular-nums;
+  color: var(--color-accent-text);
+}
+/* Card category label: 13px · 600 · uppercase. */
+@utility label-cat {
+  font-size: var(--text-2xs);
+  line-height: var(--text-2xs--line-height);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-accent-text);
 }
 
-/* Minimum 44×44 touch target for icon buttons, nav items, chips. */
-@utility tap-target {
-  min-width: var(--tap-min);
+/* Panel: the one card surface (radius 28, hairline border). */
+@utility panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  transition: border-color var(--duration-base) var(--ease-out);
+  &:hover { border-color: var(--color-line-strong); }
+}
+/* Row panel: hover border turns accent (services, experience, certificates). */
+@utility panel-row {
+  &:hover { border-color: var(--color-accent); }
+}
+
+/* Chip: pill tag. Static by default; on <button> it becomes a filter chip. */
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-line-strong);
+  font-size: var(--text-xs);
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--color-fg);
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+@utility chip-button {
   min-height: var(--tap-min);
+  padding-inline: 1.25rem;
+  @media (hover: hover) {
+    &:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+  }
+  &[aria-pressed="true"] {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+}
+/* Link chip (social): accent outline + soft wash on hover (same language as ghost buttons). */
+@utility chip-link {
+  min-height: var(--tap-min);
+  &:hover {
+    background-color: var(--color-accent-soft);
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+}
+
+/* Form field (input / textarea). */
+@utility field {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.875rem 1.125rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-line-strong);
+  background-color: var(--color-bg-2);
+  color: var(--color-fg);
+  font-size: var(--text-body);
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+  &::placeholder { color: var(--color-fg-muted); }
+  &:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--p-glow); }
+  &:focus-visible { outline: none; }
+}
+
+/* Header link with grow-from-left underline. */
+@utility nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding: 0.5rem 0.125rem;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: color var(--duration-base) var(--ease-out);
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0.25rem;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  &:hover { color: var(--color-fg); }
+  &:hover::after { transform: scaleX(0.5); }
+  &[aria-current="page"] { color: var(--color-fg); }
+  &[aria-current="page"]::after { transform: scaleX(1); }
+}
+
+/* Round 44px outline button (palette picker, menu). Accent ring + soft wash + tilt on hover. */
+@utility icon-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-line-strong);
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+  &:hover {
+    background-color: var(--color-accent-soft);
+    border-color: var(--color-accent);
+    transform: rotate(14deg);
+  }
+}
+
+/* Color swatch inside the palette picker. */
+@utility swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1px rgb(128 128 128 / 0.45);
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Swatch button (36×44 hit area) — hover grows, selected gets a double ring. */
+@utility swatch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: var(--tap-min);
+  &:hover .swatch { transform: scale(1.2); }
+  &[aria-pressed="true"] .swatch {
+    box-shadow:
+      inset 0 0 0 1px rgb(128 128 128 / 0.45),
+      0 0 0 2px var(--color-surface),
+      0 0 0 4px var(--color-fg);
+  }
+}
+
+/* Project card: lift, accent border + glow on the thumb, inner zoom, arrow pop. */
+@utility project-card {
+  transition: transform var(--duration-base) var(--ease-out);
+  & .thumb {
+    border: 1px solid var(--color-line);
+    transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+  }
+  & .thumb-inner { transition: transform var(--duration-zoom) var(--ease-out); }
+  & .card-arrow {
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      background-color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
+  }
+  @media (hover: hover) {
+    &:hover { transform: translateY(-8px); }
+    &:hover .thumb { border-color: var(--color-accent); box-shadow: var(--shadow-glow); }
+    &:hover .thumb-inner { transform: scale(1.05); }
+    &:hover .card-arrow {
+      transform: translate(4px, -4px);
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-on-accent);
+    }
+  }
+  /* Whole card is the link → draw focus on the card. */
+  &:has(:focus-visible) { outline: 3px solid var(--color-accent-text); outline-offset: 6px; border-radius: var(--radius-xl); }
+  & :focus-visible { outline: none; }
+}
+/* Projects page: even cards drop down on wide screens (mockup "stagger"). */
+@utility stagger-even {
+  @media (min-width: 56.25rem) {
+    &:nth-child(even) { margin-top: 3.5rem; }
+  }
 }
 
 /* Whole-card link: put on the single <a> inside a relative card. */
@@ -265,39 +357,184 @@
   }
 }
 
-/* Sticky header offset for mobile safe area (notch). */
-@utility header-safe {
-  padding-top: env(safe-area-inset-top);
+/* Soft blurred accent blob used behind CTA panels. */
+@utility glow-blob {
+  position: absolute;
+  border-radius: var(--radius-full);
+  background-color: var(--color-accent);
+  pointer-events: none;
 }
 
-@utility duration-fast { transition-duration: var(--duration-fast); }
-@utility duration-base { transition-duration: var(--duration-base); }
-@utility duration-slow { transition-duration: var(--duration-slow); }
+/* 1.5px outline used by ghost buttons, icon buttons, inputs (mockup value). */
+@utility edge-bold {
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+@utility tap-target {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+}
+@utility header-safe { padding-top: env(safe-area-inset-top); }
 
 @utility z-raised   { z-index: var(--z-raised); }
-@utility z-header   { z-index: var(--z-header); }
 @utility z-dropdown { z-index: var(--z-dropdown); }
-@utility z-overlay  { z-index: var(--z-overlay); }
 @utility z-modal    { z-index: var(--z-modal); }
-@utility z-toast    { z-index: var(--z-toast); }
 @utility z-skip     { z-index: var(--z-skip); }
 
-/* 6. Code highlighting (Shiki dual theme via rehype-pretty-code) ------------ */
+/* 5. Motion -------------------------------------------------------------------
+   Every effect collapses under prefers-reduced-motion (base layer rule).     */
+@layer base {
+  @keyframes rise  { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  @keyframes sway  { 0%, 100% { transform: rotate(-2deg) scale(1); } 50% { transform: rotate(2deg) scale(1.03); } }
+  @keyframes grow  { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes bob   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgb(53 211 153 / 0.55); } 70% { box-shadow: 0 0 0 10px rgb(53 211 153 / 0); } }
+  @keyframes pop   { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}
+
+/* Page entrance: direct children of the page wrapper rise in sequence. */
+@utility view {
+  & > * { animation: rise var(--duration-rise) var(--ease-out) both; }
+  & > *:nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+  & > *:nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+  & > *:nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+  & > *:nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+  & > *:nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+  & > *:nth-child(7) { animation-delay: calc(var(--stagger) * 6); }
+  & > *:nth-child(n + 8) { animation-delay: calc(var(--stagger) * 7); }
+}
+@utility anim-sway { animation: sway 16s ease-in-out infinite; transform-origin: 60% 50%; will-change: transform; }
+@utility anim-grow { transform-origin: top; animation: grow 1.2s var(--ease-out) both 0.2s; }
+@utility anim-bob  { animation: bob 6s ease-in-out infinite; will-change: transform; }
+@utility anim-live { animation: pulse 2.4s ease-out infinite; }
+@utility anim-pop  { animation: pop 0.3s var(--ease-out) both; }
+
+/* Main (filled) & ghost button motion — variants live in ui/Button.tsx. */
+@utility btn-motion {
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    filter var(--duration-base) var(--ease-out);
+  & .btn-icon { transition: transform var(--duration-base) var(--ease-out); }
+  @media (hover: hover) {
+    &:hover { transform: translateY(-3px); }
+  }
+  &:active { transform: translateY(0); }
+}
+
+/* Filled button (owner-approved look, unchanged from the mockup): lift + colored shadow. */
+@utility btn-main {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  &:hover { box-shadow: var(--shadow-cta); }
+}
+
+/* Outline button: line → accent outline, soft accent wash and glow on hover (never a full invert).
+   Its arrow follows its direction: trailing icon slides right, leading icon slides left. */
+@utility btn-ghost {
+  border: 1.5px solid var(--color-line-strong);
+  color: var(--color-fg);
+  &:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent-soft);
+    box-shadow: 0 12px 28px -14px var(--p-glow);
+  }
+  @media (hover: hover) {
+    &:hover .btn-icon-end { transform: translateX(4px); }
+    &:hover .btn-icon-start { transform: translateX(-4px); }
+  }
+}
+
+/* Mobile menu dialog: fade + items slide in. */
+@layer base {
+  dialog[open] { animation: rise var(--duration-slow) var(--ease-out); }
+}
+
+/* 6. Article prose (blog MDX body, privacy) ---------------------------------- */
 @layer components {
-  pre[data-theme],
-  code[data-theme] {
-    background-color: var(--color-surface-muted);
+  .prose {
+    max-width: var(--container-measure);
+    font-size: var(--text-body-md);
+    line-height: 1.75;
+    color: var(--color-fg-muted);
   }
-  pre[data-theme] {
-    overflow-x: auto;              /* code scrolls inside its box, page never does */
-    padding: 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+  .prose > * + * { margin-top: 1.25em; }
+  .prose :is(h2, h3, h4) { color: var(--color-fg); }
+  .prose h2 {
+    margin-top: 2.25em;
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+  }
+  .prose h3 {
+    margin-top: 2em;
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+  }
+  .prose :is(strong, b) { color: var(--color-fg); font-weight: 600; }
+  .prose a {
+    color: var(--color-accent-text);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .prose :is(ul, ol) { padding-left: 1.25em; }
+  .prose ul { list-style: disc; }
+  .prose ol { list-style: decimal; }
+  .prose li + li { margin-top: 0.4em; }
+  .prose li::marker { color: var(--color-accent-text); }
+  .prose blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1em;
+    font-style: italic;
+  }
+  .prose hr { margin-block: 2.5em; border-color: var(--color-line); }
+  .prose :not(pre) > code {
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    background-color: var(--color-surface-2);
+    color: var(--color-fg);
     font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+  .prose figure[data-rehype-pretty-code-figure] { margin-block: 1.75em; }
+  .prose img { border-radius: var(--radius-lg); border: 1px solid var(--color-line); }
+  .prose table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
     font-size: var(--text-sm);
-    line-height: 1.7;
   }
-  [data-theme] span {
-    color: light-dark(var(--shiki-light), var(--shiki-dark));
+  .prose :is(th, td) {
+    border: 1px solid var(--color-line);
+    padding: 0.5em 0.75em;
+    text-align: left;
   }
+  .prose th { color: var(--color-fg); background-color: var(--color-surface-2); }
+
+  /* Code blocks: always the dark code-card look (matches the hero). */
+  pre[data-theme] {
+    overflow-x: auto;
+    padding: 1.25rem 1.375rem;
+    border: 1px solid var(--color-code-line);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-code-bg);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.8;
+  }
+  [data-theme] span { color: var(--shiki-dark); }
+}
+
+/* 7. Print (resume) ---------------------------------------------------------- */
+@media print {
+  :root { color-scheme: light; }
+  header, footer, [data-print="hide"] { display: none !important; }
+  body { background: white; color: black; }
+  .view > * { animation: none !important; }
+  a { color: inherit; text-decoration: none; }
 }

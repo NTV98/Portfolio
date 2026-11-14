@@ -37,7 +37,7 @@
 | Variant | `class-variance-authority` + `clsx` + `tailwind-merge` | Variant có kiểu, tránh component trùng lặp | shadcn/ui (dễ ra giao diện "template", nhiều code thừa; có thể tham khảo pattern) |
 | Icon | `lucide-react` (UI) + `simple-icons` (thương hiệu/công nghệ, đơn sắc) | Lucide đã bỏ icon thương hiệu | react-icons (rất nặng, style không đồng nhất) |
 | Đa ngôn ngữ | **next-intl**, segment `[locale]`, `localePrefix: "always"` | Hỗ trợ App Router + RSC tốt, render static qua `setRequestLocale`, metadata theo ngôn ngữ, message có kiểu | Tự viết từ điển (phải tự làm routing/nhận diện ngôn ngữ) |
-| Theme | `next-themes` (chiến lược class, mặc định system) | Script chống nháy theme, rất nhẹ; kết hợp `light-dark()` trong CSS | Tự viết script |
+| Theme | **Tự viết**: 6 bảng màu qua `<html data-palette>` + script `<head>` nhỏ (`src/components/layout/theme.ts`) | Không phụ thuộc thư viện; mặc định theo `prefers-color-scheme` ngay cả khi chưa có JS; không nháy màu | `next-themes` (chỉ hỗ trợ tốt mô hình sáng/tối) |
 | Dữ liệu nội dung | Module TS + schema **Zod** | An toàn kiểu, dễ refactor, build lỗi khi dữ liệu sai; Zod dùng lại cho form liên hệ | JSON (không kiểu/không comment), CMS (ngoài phạm vi) |
 | Blog | File MDX `src/content/blog/<slug>/{vi,en}.mdx`; `gray-matter` + `next-mdx-remote` (RSC) | Loader đọc file đơn giản, biên dịch lúc build, mỗi ngôn ngữ một file | Velite / content-collections (thêm bước build; cân nhắc khi số bài lớn) |
 | Highlight code | `rehype-pretty-code` + **Shiki** (lúc build, 2 theme sáng/tối) | Không JS phía client, grammar chính xác | Prism phía client |
@@ -105,7 +105,7 @@ Lưu ý: `public/` bắt buộc nằm ở gốc repo (yêu cầu của Next.js),
 3. **Tách chữ giao diện khỏi nội dung**: `messages/*.json` = giao diện; `data/` = thông tin về chủ dự án.
 4. **Chặn placeholder**: `scripts/check-placeholders.ts` quét `[PLACEHOLDER]` → cảnh báo ở dev, làm `build:prod` thất bại khi `STRICT_CONTENT=true`.
 5. **Mỗi release một image tag**: `portfolio:<git-sha>`; rollback = chuyển về tag trước.
-6. **Theme bằng `light-dark()`**: màu định nghĩa một lần, theo hệ điều hành trước khi JS tải, `next-themes` chỉ gắn class để ép theme.
+6. **Bảng màu bằng biến CSS**: mỗi bảng màu là một khối `--p-*` dưới `:root[data-palette="…"]`; token ngữ nghĩa của Tailwind trỏ tới các biến đó. Chưa chọn → CSS tự chọn `violet`/`light` theo hệ điều hành. Đã chọn → `localStorage` + script `<head>` gắn thuộc tính trước lần vẽ đầu (DESIGN_SYSTEM §2.1).
 
 ## 6. Bảo mật
 

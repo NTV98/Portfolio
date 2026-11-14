@@ -1,0 +1,26 @@
+---
+title: "Kiểm tra pipeline MDX (bản nháp, chỉ hiện ở môi trường dev)"
+description: "Bài nháp dùng để kiểm thử render MDX, highlight code và typography. Không xuất hiện ở bản build production."
+date: "2026-11-14"
+tags: ["meta"]
+draft: true
+---
+
+Đây là **bài nháp kỹ thuật** để kiểm tra pipeline — không phải bài viết thật. Có `code inline`, [link ngoài](https://nextjs.org) và danh sách:
+
+- Tiêu đề có dấu: Ẫ Ỗ Ặ Ữ — kiểm tra line-height.
+- Code block highlight lúc build.
+
+## Ví dụ code
+
+```ts
+export function greet(name: string): string {
+  return `Xin chào, ${name}!`;
+}
+```
+
+> Trích dẫn để kiểm tra style blockquote.
+
+| Cột A | Cột B |
+| ----- | ----- |
+| 1     | 2     |

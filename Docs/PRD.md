@@ -45,16 +45,16 @@ Hoãn lại (chỉ làm khi có nội dung thật): `/uses`, `/now`, `/services`
 
 | Trang | Bắt buộc có | Nguồn dữ liệu |
 |---|---|---|
-| Home | Hero bento (tên, chức danh, giới thiệu, avatar, CTA: Xem dự án / Liên hệ / Tải CV), trạng thái sẵn sàng làm việc, công nghệ nổi bật, dự án nổi bật (≤ 3), tóm tắt About, tổng quan kinh nghiệm (2–3 gần nhất), bài viết mới (≤ 3, ẩn hoặc teaser nếu chưa có), CTA liên hệ | profile, projects, experience, posts |
-| About | Giới thiệu, nền tảng nghề nghiệp, triết lý phát triển, định hướng, thế mạnh, học vấn & chứng chỉ (nếu có), sở thích (tuỳ chọn) | profile, education |
-| Skills | 8 nhóm (Ngôn ngữ, Frontend, Backend, Database, DevOps & Hạ tầng, Cloud & Deploy, Công cụ, Kiến trúc & Kỹ thuật); icon đơn sắc; **không** %, số năm, xếp hạng | skills |
-| Projects | Tìm kiếm, lọc loại (PERSONAL, OPEN_SOURCE, COMPANY, EXPERIMENTAL, SIDE_PROJECT), nổi bật trước, lưới card, trạng thái rỗng/không kết quả | projects |
-| Chi tiết dự án | Tổng quan, vấn đề/giải pháp, vai trò, stack, tính năng, kiến trúc (nếu an toàn), ảnh chụp (nếu được phép), trạng thái, thời gian, link (nếu có), dự án liên quan (cùng loại/tag) | projects |
-| Experience | Timeline: tổ chức (nếu được công khai), chức danh, thời gian, trách nhiệm, công nghệ, đóng góp đã xác minh, link tới dự án đã làm sạch | experience |
+| Home | (theo `Docs/DesignUI/`) Hero: trạng thái sẵn sàng, "Xin chào, mình là <tên>", chức danh, giới thiệu, CTA Xem dự án / Liên hệ mình, code card `developer.ts`; Công nghệ (Backend/Frontend); Mình có thể giúp bạn (4 dịch vụ); dự án nổi bật (≤ 3); kinh nghiệm (tóm tắt + 3 gần nhất); banner mã nguồn mở (khi có dự án OPEN_SOURCE); CTA liên hệ | profile, highlights, projects, experience |
+| About | Ảnh chân dung, 3 đoạn giới thiệu, CTA Làm việc cùng mình / Xem kinh nghiệm, "Cách mình làm việc" (4 bước) | profile, highlights |
+| Skills | 4 nhóm (Backend, Frontend, Công cụ, Cách làm việc), chip chữ; "Chứng chỉ và học tập"; **không** %, số năm, xếp hạng | skills, education |
+| Projects | Chip lọc theo loại đang có dữ liệu (PERSONAL, OPEN_SOURCE, COMPANY, EXPERIMENTAL, SIDE_PROJECT), nổi bật trước, lưới card so le, trạng thái rỗng/không kết quả | projects |
+| Chi tiết dự án | Danh mục, tiêu đề, tóm tắt; meta Vai trò/Thời gian/Công nghệ/Liên kết; minh hoạ lớn; chip stack; khối đánh số (Tổng quan, Bài toán, Giải pháp, Phần phụ trách, Tính năng, Kiến trúc, Kết quả — chỉ phần có dữ liệu); ảnh chụp (PUBLIC); dự án trước/tiếp theo | projects |
+| Experience | Mỗi vai trò một panel: thời gian, chức danh, tổ chức (nếu được công khai), mô tả/trách nhiệm, đóng góp, chip công nghệ, link dự án đã làm sạch | experience |
 | Resume | Tóm tắt, kỹ năng, kinh nghiệm, dự án, học vấn, chứng chỉ, tải CV PDF theo ngôn ngữ (hoặc trạng thái chưa cấu hình); CSS khi in | tất cả |
 | Blog | Danh sách, tìm kiếm, tag, thời gian đọc, ngày đăng, trạng thái rỗng | MDX |
 | Bài viết | Render MDX, highlight code bằng Shiki, mục lục (tuỳ chọn), bài liên quan, bài trước/sau | MDX |
-| Contact | Form (validate, loading, thành công thật, lỗi, honeypot + rate limit) hoặc mailto dự phòng; email, GitHub, LinkedIn, mạng xã hội khác, địa điểm (tuỳ chọn) | site config |
+| Contact | Cột thông tin (Email, Điện thoại/Zalo, Địa điểm, Mạng xã hội) + form Họ tên/Email/Bạn cần giúp gì/Lời nhắn. v1: form soạn email qua `mailto:` (không gửi về server); ẩn form khi email chưa cấu hình. Sau này: Server Action + honeypot + rate limit | site config, social |
 | Privacy | Form thu thập gì, mục đích, thời gian lưu, provider, cách yêu cầu xoá | i18n tĩnh |
 | 404 | Thông báo + link về Home/Projects/Blog | — |
 

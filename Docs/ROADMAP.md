@@ -8,6 +8,28 @@
 - ☑ CSS tổng đề xuất: `src/styles/tokens.css` + `src/app/globals.css` (sáng/tối bằng `light-dark()`, responsive điện thoại/tablet/desktop, bento). Đã biên dịch thử bằng Tailwind CLI v4.3.5 — thành công.
 - ☐ Chủ dự án trả lời câu hỏi mở (README → "Câu hỏi cần xác nhận") và duyệt kế hoạch + design system.
 
+## Mốc UI v2 — Dựng lại giao diện theo `Docs/DesignUI/` ☑ (2026-11-14, chờ chủ dự án duyệt trực quan)
+- ☑ Thay toàn bộ UI "Minimalist + Bento" bằng thiết kế của chủ dự án: token + 6 bảng màu (`tokens.css`), utility/component class (`globals.css`), font Be Vietnam Pro (thay Poppins — đã duyệt), bộ chọn màu thay nút sáng/tối.
+- ☑ Đã xoá: `bento/`, `motion/RevealObserver`, `media/HeroMedia`, `ThemeToggle`, `SearchFilter`, `Tag`, `Badge`, `CopyButton`, `tech-icons`, `Timeline`.
+- ☑ Trang theo mockup: Home, About, Skills, Projects, Chi tiết dự án (dự án trước/sau), Experience, Contact (form mailto). Blog, Resume, Privacy, 404 dùng cùng bộ component.
+- ☑ Dữ liệu mới: `src/data/highlights.ts` (code card, Công nghệ, dịch vụ, cách làm việc); `skills.ts` theo 4 nhóm của mockup; `profile.ts` thêm `monogram`, `headline`, `experienceSummary`, `openSourceBlurb`, `about`; `social.ts` thêm `phone`, `facebook`; dự án thêm trường `outcome`.
+- ☑ Cập nhật DESIGN_SYSTEM, UI_UX_GUIDELINES, COMPONENT_GUIDELINES, CONTENT_GUIDE, ARCHITECTURE, PRD, README, CLAUDE.md.
+- ☑ typecheck · lint · unit (21) · build · E2E (19, gồm axe sáng/tối) — xem TESTING.md.
+- ☐ Chủ dự án duyệt trực quan; điền nội dung `[PLACEHOLDER]` (địa điểm, email, kinh nghiệm, đoạn About 2–3, học vấn).
+- ☐ Kỹ năng bị bỏ so với bản cũ (Docker, Kubernetes, Nginx, Linux, NestJS, Tailwind CSS, SQL Server, JavaScript, nhóm Cloud): chủ dự án xác nhận có thêm lại hay không.
+- ☐ `simple-icons` không còn được dùng → có thể gỡ khỏi `package.json`.
+
+## Mốc UI v2.1 — Điều chỉnh theo phản hồi ☑ (2026-11-14)
+- ☑ Thêm 6 bảng màu đề xuất (midnight, forest, ruby, amber, graphite, sand) → tổng 12; chọn màu ghi log ra console.
+- ☑ Hover nút ghost / nút tròn / chip link: viền + nền phủ màu nhấn, icon trượt (thay cho đảo màu). Nút chính giữ nguyên.
+- ☑ Avatar tròn thay chữ "V" ở header, menu mobile, footer; avatar minh hoạ mẫu.
+- ☑ 6 dự án mẫu (2 cá nhân, 2 công ty, 2 mã nguồn mở) có ảnh bìa, ảnh chụp, video review (PUBLIC); card có mô tả ngắn + nhãn Video.
+- ☑ Thay mọi `[PLACEHOLDER]` bằng nội dung mẫu đánh dấu `@sample`; `check:content` liệt kê `@sample`.
+- ☑ Email liên hệ thật → form mailto đã bật; hỗ trợ Zalo (`social.zalo`).
+- ☑ v2.2: thêm ocean, coffee, lime, lavender, mint, sakura → tổng 18 bảng màu; nút đổi ngôn ngữ thu gọn thành nút tròn.
+- ☐ **Chủ dự án chọn bảng màu mặc định** → đổi mặc định trong `tokens.css` + gỡ `console.info` trong `PalettePicker`.
+- ☐ Cung cấp số điện thoại/Zalo; thay toàn bộ nội dung `@sample` (ảnh thật, video thật, kinh nghiệm, học vấn, địa điểm).
+
 ## Giai đoạn 1 — Nền tảng
 - ☑ `git init`, `.gitignore` (loại toàn bộ `.claude/`, `.env*`), `.gitattributes` (LF); push lên GitHub `NTV98/Portfolio` nhánh `main` (2026-11-14).
 - ☐ Scaffold Next.js (TS strict, App Router, `src/`), ESLint, Prettier (+ plugin tailwind), `.nvmrc`. Giữ nguyên `tokens.css`/`globals.css` đã duyệt.

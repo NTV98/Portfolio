@@ -75,4 +75,12 @@
 | 2026-11-14 | Windows 11, Node 20.19, Tailwind CLI 4.3.5 (cài tạm trong scratchpad, không cài vào dự án) | Biên dịch `src/app/globals.css` + `src/styles/tokens.css` với HTML mẫu | PASS — biên dịch thành công; sinh đúng `text-h1`, `bento-*`, `eyebrow`, `bg-accent`, `grid-cards`, `max-w-measure`, `card-interactive`; `dark:` → `:where(.dark, .dark *)`; `bg-zinc-500`, `text-2xl` **không** được sinh (reset palette hoạt động); `@media` lồng nhau được làm phẳng khi `--minify` |
 | 2026-11-14 | Node script | Tính độ tương phản WCAG cho palette | PASS — mọi token chữ ≥ 4.5:1 trên mọi bề mặt (sau khi chỉnh `fg-subtle` sáng thành `#6B6B74`) |
 
-Chưa kiểm tra hiển thị trên trình duyệt thật (chưa có ứng dụng) — sẽ làm ở Giai đoạn 1–2.
+| 2026-11-14 | Windows 11, Node 20.19, Next 16.4 (UI v2 theo `Docs/DesignUI/`) | `npm run typecheck` | PASS |
+| 2026-11-14 | như trên | `npm run lint` (đã loại `Docs/**` — mã vendor của mockup) | PASS — 0 lỗi, 0 cảnh báo |
+| 2026-11-14 | như trên, chạy từ `C:\Projects\Portfolio` | `npm run test` (Vitest) | PASS — 4 file, 21 test (format, i18n cùng bộ khoá, visibility dự án, logic UI mới: `buildMailto`, bảng màu, highlights, dự án trước/sau). **Lưu ý:** mở terminal ở `c:\` (chữ thường) làm Vitest lỗi "reading 'config'" — lỗi môi trường Windows, không phải code. |
+| 2026-11-14 | như trên | `npm run build` | PASS — mọi trang SSG cho `vi` + `en` |
+| 2026-11-14 | Playwright Chromium trên `next start` | `npx playwright test` | PASS — 19/19: redirect theo ngôn ngữ, 1 `h1` + `lang` đúng ở 20 trang, đổi ngôn ngữ giữ đường dẫn, 404 có khung trang, mọi link nội bộ hợp lệ, bảng màu áp dụng + giữ sau reload + Esc đóng popover, chip lọc + URL `?f=`, dự án PRIVATE không có link repo, link ngoài an toàn, CV/email chưa cấu hình hiển thị trung thực, blog rỗng, không cuộn ngang ở 360/768/1280, menu mobile, axe WCAG 2.2 AA ở chế độ sáng + tối (đo với `reducedMotion: reduce` để không bắt khung giữa animation). |
+| 2026-11-14 | Node script | Tương phản WCAG 6 bảng màu | PASS — mọi cặp chữ ≥ 5.2:1 (DESIGN_SYSTEM §3.2) |
+| 2026-11-14 | Chụp màn hình Playwright 1440/390px (violet, light, teal, orange) | So sánh trực quan với mockup | Khớp bố cục; đã sửa lỗi viền nút ghost bị `tailwind-merge` xoá (`border-bold` → `edge-bold`). Chờ chủ dự án duyệt. |
+
+Chưa đo Lighthouse cho UI v2.

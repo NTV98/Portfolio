@@ -1,379 +1,245 @@
-# Design System — Minimalist + Bento Grid
+# Design System — "Portfolio Nguyễn Tuấn Vũ"
 
-> **Trạng thái:** BẢN NHÁP v0.2 — chờ chủ dự án phê duyệt. Sau khi duyệt, đây là **nguồn chân lý duy nhất** cho mọi giao diện.
-> **Quy tắc:** Không thêm style, màu, font, radius, shadow hay layout pattern mới khi chưa cập nhật file này **và** được chủ dự án duyệt.
-> Liên quan: [UI_UX_GUIDELINES.md](UI_UX_GUIDELINES.md) · [COMPONENT_GUIDELINES.md](COMPONENT_GUIDELINES.md)
-> Hiện thực hoá: [`src/styles/tokens.css`](../src/styles/tokens.css) · [`src/app/globals.css`](../src/app/globals.css)
-
----
+> **Trạng thái:** v2.2 (2026-11-14: tổng 18 bảng màu, nút ngôn ngữ thu gọn; v2.1: +6 bảng màu, hover nút ghost mới, avatar, ảnh/video dự án) — v2.0 dựng lại theo thiết kế của chủ dự án trong `Docs/DesignUI/` (`Portfolio-html/Main.dc.html` + `Portfolio Nguyễn Tuấn Vũ.pdf`). Thay thế hoàn toàn bản v0.1 "Minimalist + Bento Grid".
+> **Nguồn sự thật:** `src/styles/tokens.css` (token) và `src/app/globals.css` (utility/component class). Tài liệu này giải thích *tại sao* và *khi nào dùng*; giá trị chính xác nằm trong code.
+> Mockup HTML chỉ là **tham chiếu**: không copy markup/inline style vào app — luôn tái hiện bằng token + component.
 
 ## 1. Nguyên tắc thiết kế
 
-| # | Nguyên tắc | Ý nghĩa thực tế |
-|---|---|---|
-| 1 | **Nội dung là trên hết** | Typography và khoảng trắng tạo nên thiết kế. Trang trí phải có lý do tồn tại. |
-| 2 | **Bento là công cụ** | Dùng Bento khi nội dung đa dạng (Home, tóm tắt Project detail, điểm nổi bật About). Danh sách, bài viết, form dùng layout thường. |
-| 3 | **Một màu nhấn** | Chỉ một accent, dùng tiết kiệm: CTA chính, link, focus ring, trạng thái active. Tối đa ~1 phần tử tô accent mỗi section. |
-| 4 | **Viền thay bóng** | Phân tách bề mặt bằng viền 1px + bậc nền. Shadow chỉ cho lớp nổi (menu, dialog, toast). |
-| 5 | **Chuyển động tiết chế** | Motion chỉ để xác nhận tương tác (hover, focus, mở/đóng). Không hiệu ứng theo scroll, không parallax. |
-| 6 | **An toàn song ngữ** | Token phải hợp với dấu tiếng Việt (line-height, font subset) và độ dài chênh VI/EN (VI thường dài hơn 15–30%). |
-| 7 | **Giao diện trung thực** | Không nút giả, số liệu giả, thanh tiến độ giả, trạng thái thành công giả. |
-
-**Dấu ấn riêng (để không giống template):**
-- **Nhãn eyebrow font mono** có số thứ tự phía trên tiêu đề — ví dụ `01 / PROJECTS`, `STATUS · OPEN TO WORK`.
-- **Metadata dạng mono, số tabular** (ngày, thời gian đọc, stack) — cảm giác "bảng thông số" của kỹ sư.
-- **Lưới hairline**: viền 1px, radius và gap đồng nhất tuyệt đối — sự chính xác chính là thẩm mỹ.
-- **Icon công nghệ đơn sắc** (`currentColor`), không dùng logo màu sặc sỡ.
-
-**Cấm:** gradient làm nền, glow, glassmorphism/backdrop blur (kể cả header — header dùng nền `bg` đặc + viền dưới), neon, 3D tilt, hiệu ứng theo con trỏ, thanh % kỹ năng, blob/minh hoạ ngẫu nhiên, emoji làm icon UI, nhiều hơn một màu accent.
-
----
+1. **Tối, đậm, tự tin.** Nền gần đen ánh màu, tiêu đề cỡ rất lớn (800), một màu nhấn duy nhất theo bảng màu đang chọn.
+2. **Bo tròn mềm.** Panel bo 28px, nút và chip là viên thuốc (pill). Không góc vuông.
+3. **Viền mảnh, ít bóng.** Panel dùng viền 1px `line`; bóng chỉ dùng cho phần tử nổi (code card, popover, cửa sổ mock).
+4. **Màu nhấn có chủ đích.** `accent` cho nền nút/chấm/thanh; `accent-text` khi màu nhấn là **chữ** (đảm bảo tương phản). Nhóm/danh mục dùng `key-1…6` (chấm) và `tint-1…6` (nền thumb).
+5. **Chuyển động có nhịp.** Trang vào bằng hiệu ứng "rise" so le; hover nâng nhẹ; trang trí chuyển động chậm (đường cong sway 16s, code card bob 6s). Tắt hết khi `prefers-reduced-motion`.
+6. **Trung thực.** Không ảnh chụp hệ thống công ty — thumbnail dự án là minh hoạ trừu tượng (cửa sổ trình duyệt mock).
 
 ## 2. Kiến trúc token & CSS tổng
 
 ```
-src/styles/tokens.css   ← @theme (màu, font, cỡ chữ, radius, shadow, easing, container)
-                          + :root (token layout responsive, z-index, duration)
-src/app/globals.css     ← @import tailwindcss + tokens, base styles,
-                          utilities layout / bento / helper, style code Shiki
-components              ← CHỈ dùng class ngữ nghĩa (bg-surface, text-fg-muted, bento-2x2 …)
+tokens.css   @theme (Tailwind)  →  --color-*  --text-*  --radius-*  --shadow-*  --font-*  --container-*
+             :root[data-palette]  →  --p-*  (giá trị thô của 6 bảng màu)
+             :root               →  --gutter --page-top --section-gap --z-* --duration-*
+globals.css  base · layout utility · component class · motion · prose · print
 ```
 
-### 2.1 Sáng / tối (Light / Dark)
-- Màu khai báo **một lần** bằng `light-dark(<sáng>, <tối>)` — không lặp bảng màu cho dark.
-- Theme quyết định bởi `color-scheme`:
-  - `:root` → `light dark`: theo hệ điều hành (hoạt động cả trước khi JS tải → không nháy màu).
-  - `html.light` / `html.dark` → ép theme (do `next-themes` gắn class, mặc định **system**).
-- Vì token tự đổi màu, component **gần như không cần** variant `dark:`. Chỉ dùng `dark:` cho khác biệt không phải màu.
-- Hỗ trợ trình duyệt của `light-dark()`: Chrome 123+, Safari 17.5+, Firefox 120+.
+- `@theme` **reset** toàn bộ palette/cỡ chữ/bo góc/bóng/container mặc định của Tailwind → class như `bg-zinc-500`, `text-2xl`, `rounded-xl` (mặc định) không tồn tại. Chỉ token của dự án biên dịch được. Thang spacing mặc định (`p-6`, `gap-5.5`…) **vẫn dùng**.
+- Màu ngữ nghĩa trỏ tới biến bảng màu: `--color-surface: var(--p-surface)`. Đổi bảng màu = đổi thuộc tính `data-palette` trên `<html>`, không cần class `dark:`.
 
-### 2.2 Ràng buộc bằng trình biên dịch
-`tokens.css` **reset** các namespace mặc định của Tailwind (`--color-*`, `--text-*`, `--shadow-*`, `--radius-*`, `--font-*`, `--leading-*`, `--tracking-*`, `--ease-*`). Kết quả: class như `bg-zinc-500`, `text-2xl` **không tồn tại** — quy tắc "chỉ dùng token" được cưỡng chế khi build, không chỉ nằm trên giấy.
-Đã kiểm chứng (2026-11-14, Tailwind CLI v4.3.5): biên dịch thành công; `bg-zinc-500`, `text-2xl` không được sinh; `dark:` sinh đúng `:where(.dark, .dark *)`; `@media` lồng nhau được làm phẳng khi minify.
+### 2.1 Bảng màu (palette)
 
-### 2.3 Responsive bằng token
-Token layout nằm trong `:root` và tự tăng ở **tablet (≥ 768px)** và **desktop (≥ 1024px)** — component không cần viết breakpoint cho khoảng cách:
+| Giá trị `data-palette` | Kiểu | Ghi chú |
+|---|---|---|
+| `violet` | tối | **Mặc định** khi hệ điều hành ở chế độ tối |
+| `light` | sáng | **Mặc định** khi hệ điều hành ở chế độ sáng |
+| `blue`, `teal`, `orange`, `pink` | tối | Từ mockup; chọn qua bộ chọn màu trên header |
+| `midnight` (navy + cyan), `forest` (xanh rừng + mint), `ruby` (đỏ rượu + hồng), `amber` (đen ấm + vàng), `graphite` (đơn sắc) | tối | **v2.1 — Claude đề xuất**, chờ chủ dự án chọn mặc định |
+| `sand` (giấy ấm + cam cháy) | sáng | **v2.1 — Claude đề xuất** |
+| `ocean` (xanh biển sâu + xanh trời), `coffee` (nâu cà phê + caramel), `lime` (đen + xanh chanh, chữ trên nút tối) | tối | **v2.2 — Claude đề xuất** |
+| `lavender` (oải hương), `mint` (bạc hà), `sakura` (hoa anh đào) | sáng | **v2.2 — Claude đề xuất** |
 
-| Token | Điện thoại | Tablet ≥ 768 | Desktop ≥ 1024 | Utility |
-|---|---|---|---|---|
-| `--gutter` (padding ngang container) | 16px | 24px | 32px | `container-page` / `-wide` / `-prose` |
-| `--grid-gap` | 16px | 16px | 24px | `gap-grid`, `bento`, `grid-cards` |
-| `--card-pad` | 20px | 20px | 24px | `card-pad`, `bento-cell` |
-| `--section-y` | 64px | 80px | 96px | `section` |
-| `--page-top` | 48px | 64px | 80px | `page-top` |
-| `--stack-title` | 32px | 32px | 40px | `stack-title` |
-| `--bento-row` | auto | auto | `minmax(11rem, auto)` | `bento` |
-| `--header-h` | 64px | 64px | 64px | — |
-| `--tap-min` | 44px | 44px | 44px | `tap-target` |
+Bộ chọn hiển thị **18 bảng màu** dạng lưới 6×3 (hàng 1: mockup · hàng 2: tối bổ sung · hàng 3: tối + sáng bổ sung).
 
-Cỡ chữ heading dùng `clamp()` co giãn mượt từ 360px → 1280px (xem §4.2).
+- Tạm thời (theo yêu cầu chủ dự án 2026-11-14): mỗi lần chọn màu, `PalettePicker` ghi `console.info("🎨 Bảng màu: <tên>")` kèm các giá trị chính. Gỡ khi đã chốt bảng màu mặc định.
+- `graphite` và `lime` có màu nhấn rất sáng → chữ trên nút dùng biến `--p-on` (tối). Các bảng màu khác `--p-on` = trắng.
 
-### 2.4 Quy trình ngoại lệ
-Thêm token vào đây → chủ dự án duyệt → thêm vào `tokens.css` → mới được dùng.
+- Chưa chọn → không có thuộc tính; CSS tự chọn theo `prefers-color-scheme` (hoạt động cả khi chưa có JS).
+- Đã chọn → lưu `localStorage["palette"]`; script nhỏ trong `<head>` (`themeScript`) gắn lại thuộc tính **trước lần vẽ đầu** (không nháy màu). Script chỉ chấp nhận 6 giá trị hợp lệ.
+- Thêm/sửa bảng màu: cập nhật đồng thời `tokens.css`, `palettes`/`paletteSwatch`/`paletteBg` trong `src/components/layout/theme.ts`, nhãn trong `messages`, bảng tương phản §3.2.
 
----
+### 2.2 Responsive bằng token
+
+Layout dùng `clamp()` và lưới `auto-fit` như mockup — **ít breakpoint**:
+
+| Token / utility | Giá trị |
+|---|---|
+| `--gutter` (padding ngang container) | `clamp(20px, 4vw, 48px)` |
+| `--page-top` (khoảng dưới header) | `clamp(32px, 6vw, 72px)` |
+| `--section-gap` (giữa các section) | 120px (80px khi < 768px) |
+| `grid-fit-sm / md / lg / xl` | cột tối thiểu 250 / 340 / 400 / 440px, tự xuống dòng |
+
+Breakpoint Tailwind mặc định chỉ dùng cho: menu (`lg` 1024px), padding panel (`md`), độ mờ hình trang trí (`max-md`), so le card dự án (≥ 900px).
+
+### 2.3 Quy trình ngoại lệ
+
+Cần giá trị không có token → **không** dùng giá trị tuỳ ý (`p-[13px]`, `h-[clamp…]`). Thêm utility/token có tên trong `globals.css`/`tokens.css` + ghi vào tài liệu này + được chủ dự án duyệt. Ngoại lệ duy nhất được phép: `style` inline của ô màu (swatch) trong bộ chọn bảng màu, vì nó *mô tả* chính bảng màu.
 
 ## 3. Màu sắc
 
-Tất cả cặp màu dưới đây đã được **tính toán thực** (độ tương phản WCAG 2.x, chạy script ngày 2026-11-14). Tỷ lệ so với `bg` / `surface` / `surface-muted`.
+### 3.1 Token ngữ nghĩa
 
-### 3.1 Theme sáng
+| Token (class) | Dùng cho |
+|---|---|
+| `bg` | Nền trang |
+| `bg-2` | Nền ô nhập liệu |
+| `surface` / `surface-2` | Panel, card / khối phụ trong mock |
+| `line` / `line-strong` | Viền mảnh, đường kẻ / viền chip, nút ghost, ô nhập |
+| `fg` / `fg-muted` | Chữ chính / chữ phụ |
+| `accent` | **Nền** nút chính, chấm, thanh, chip đang chọn, viền khi hover |
+| `accent-text` | Màu nhấn khi là **chữ**: eyebrow, nhãn danh mục, số thứ tự, link |
+| `on-accent` | Chữ trên nền `accent` (`--p-on`: trắng, riêng `graphite` là tối) |
+| `accent-soft` | Lớp phủ màu nhấn 16% — nền khi hover của nút ghost, chip link, nút tròn |
+| `key-1…6` | Chấm màu nhóm (kỹ năng, stack) và thanh trong thumb |
+| `tint-1…6` | Nền thumb dự án (màu theo vị trí dự án) |
+| `live` | Chấm "sẵn sàng" nhấp nháy |
+| `code-*` | Code card ở hero và khối code trong blog — **luôn tối**, không đổi theo bảng màu |
 
-| Token | Class ví dụ | Hex | Tương phản (bg / surface / muted) | Dùng cho |
-|---|---|---|---|---|
-| bg | `bg-bg` | `#FAFAF9` | — | Nền trang |
-| surface | `bg-surface` | `#FFFFFF` | — | Card, header, input |
-| surface-muted | `bg-surface-muted` | `#F4F4F2` | — | Code block, nền tag, hover |
-| fg | `text-fg` | `#18181B` | 16.96 / 17.72 / 16.09 | Heading, nội dung |
-| fg-muted | `text-fg-muted` | `#52525B` | 7.40 / 7.73 / 7.02 | Chữ phụ, mô tả |
-| fg-subtle | `text-fg-subtle` | `#6B6B74` | 5.05 / 5.28 / 4.79 | Metadata, caption, placeholder |
-| border | `border-border` | `#E4E4E7` | trang trí | Viền card, đường kẻ |
-| border-strong | `border-border-strong` | `#A1A1AA` | 2.45 | Viền input, viền hover |
-| accent | `bg-accent` / `text-accent` | `#2E4FD6` | 6.27 / 6.55 / 5.95 | Link, nút chính, focus ring |
-| accent-hover | `bg-accent-hover` | `#2541B8` | 7.96 / 8.31 / 7.55 | Hover/active của accent |
-| accent-fg | `text-accent-fg` | `#FFFFFF` | 6.55 trên accent | Chữ trên nền accent |
-| accent-soft | `bg-accent-soft` | accent 8% | — | Chip đang chọn, nav active, selection |
-| success | `text-success` | `#15803D` | 4.80 / 5.02 / 4.55 | Thành công |
-| warning | `text-warning` | `#B45309` | 4.81 / 5.02 / 4.56 | Cảnh báo |
-| error | `text-error` | `#B91C1C` | 6.19 / 6.47 / 5.88 | Lỗi, input không hợp lệ |
-| info | `text-info` | `#0369A1` | 5.68 / 5.93 / 5.39 | Ghi chú thông tin |
+Quy tắc:
+- Chữ màu nhấn **luôn** dùng `text-accent-text`, không dùng `text-accent` (ở một số bảng màu `accent` tối, không đủ tương phản trên nền tối).
+- `key-*`/`tint-*` chỉ để phân biệt nhóm, không mang nghĩa trạng thái.
+- Không có token success/warning/error: v1 không có form gửi lên server.
 
-> Ghi chú: `fg-subtle` ban đầu đề xuất `#71717A` chỉ đạt 4.39 trên `surface-muted` (< 4.5) → đã chỉnh thành `#6B6B74`.
+### 3.2 Độ tương phản (WCAG, đo 2026-11-14 bằng script Node)
 
-### 3.2 Theme tối
+| Bảng màu | fg/bg | muted/bg | muted/surface | accent-text/bg | accent-text/surface | trắng/accent |
+|---|---|---|---|---|---|---|
+| violet | 19.6 | 8.4 | 7.8 | 7.9 | 7.4 | 5.2 |
+| blue | 19.3 | 8.9 | 8.0 | 9.3 | 8.3 | 5.2 |
+| teal | 19.1 | 9.5 | 8.6 | 11.8 | 10.6 | 5.3 |
+| orange | 19.4 | 9.5 | 8.7 | 10.2 | 9.4 | 5.2 |
+| pink | 19.4 | 9.1 | 8.4 | 9.2 | 8.5 | 6.0 |
+| light | 17.0 | 6.1 | 6.6 | 5.9 | 6.4 | 6.4 |
+| midnight | 19.7 | 8.9 | 8.3 | 13.6 | 12.6 | 5.4 |
+| forest | 19.4 | 9.8 | 8.9 | 13.8 | 12.6 | 5.0 |
+| ruby | 19.7 | 9.0 | 8.5 | 10.4 | 9.7 | 6.3 |
+| amber | 19.4 | 10.1 | 9.4 | 13.5 | 12.5 | 5.0 |
+| graphite | 18.8 | 7.7 | 7.1 | 19.7 | 18.2 | 15.5 (chữ tối/accent) |
+| sand | 16.4 | 7.1 | 7.6 | 5.3 | 5.6 | 5.6 |
+| ocean | 19.2 | 8.9 | 8.2 | 11.5 | 10.6 | 6.7 |
+| coffee | 19.3 | 9.5 | 8.8 | 11.8 | 10.9 | 7.1 |
+| lime | 19.6 | 9.5 | 8.8 | 15.0 | 13.9 | 15.0 (chữ tối/accent) |
+| lavender | 16.3 | 6.5 | 7.0 | 6.6 | 7.1 | 7.1 |
+| mint | 16.0 | 6.1 | 6.5 | 5.1 | 5.5 | 5.5 |
+| sakura | 16.6 | 6.4 | 6.8 | 5.7 | 6.0 | 6.0 |
 
-| Token | Hex | Tương phản (bg / surface / muted) |
-|---|---|---|
-| bg | `#0C0C0B` | — |
-| surface | `#161615` | — |
-| surface-muted | `#1F1F1D` | — |
-| fg | `#FAFAFA` | 18.75 / 17.35 / 15.82 |
-| fg-muted | `#A1A1AA` | 7.64 / 7.07 / 6.44 |
-| fg-subtle | `#8B8B93` | 5.79 / 5.36 / 4.88 |
-| border | `#2A2A28` | trang trí |
-| border-strong | `#52525B` | trang trí / input |
-| accent | `#8EA2FF` | 8.17 / 7.56 / 6.89 |
-| accent-hover | `#A9B8FF` | 10.24 / 9.47 / 8.64 |
-| accent-fg | `#0C0C0B` | 8.17 trên accent |
-| accent-soft | accent 12% | — |
-| success | `#4ADE80` | 11.23 / 10.39 / 9.47 |
-| warning | `#FBBF24` | 11.72 / 10.85 / 9.89 |
-| error | `#F87171` | 7.07 / 6.55 / 5.97 |
-| info | `#38BDF8` | 9.14 / 8.45 / 7.71 |
-
-### 3.3 Quy tắc màu
-- Mọi token chữ đạt **WCAG AA (≥ 4.5:1)** trên mọi bề mặt trong theme của nó. Màu mới bắt buộc tính lại tỷ lệ và ghi vào bảng.
-- Màu semantic chỉ dùng cho **trạng thái** — không dùng trang trí hay phân loại.
-- Category/tag dự án **không** mã hoá bằng màu (chip trung tính); phân biệt bằng chữ.
-- Ảnh trong dark mode: không filter tự động; chỉ làm bản tối nếu ảnh không đọc được.
-
----
+Tất cả ≥ 4.5:1 (AA cho chữ thường). axe (Playwright) pass ở chế độ sáng và tối.
 
 ## 4. Typography
 
-### 4.1 Font (tự host qua `next/font/google`, subset `latin`, `latin-ext`, `vietnamese`)
+### 4.1 Font (tự host qua `next/font/google`, subset `latin` + `vietnamese`)
 
-| Vai trò | Font | Fallback | Token |
+| Vai trò | Font | Lý do |
+|---|---|---|
+| Sans (mọi chữ) | **Be Vietnam Pro** 400–800 | Mockup dùng Poppins, nhưng Poppins **không có subset tiếng Việt** (các dấu như ễ, ấ, ộ rơi về font khác). Be Vietnam Pro cùng phong cách hình học, thiết kế cho tiếng Việt. Chủ dự án đã duyệt 2026-11-14. |
+| Mono | JetBrains Mono 400–500 | Code card, số thứ tự `01`, mốc thời gian |
+
+### 4.2 Thang cỡ chữ (class `text-*`)
+
+| Token | Cỡ | Weight · line-height | Dùng cho |
 |---|---|---|---|
-| Sans (UI, nội dung, heading) | **Inter** (variable) | `ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif` | `font-sans` |
-| Mono (eyebrow, metadata, code) | **JetBrains Mono** (variable) | `ui-monospace, "SFMono-Regular", Consolas, monospace` | `font-mono` |
+| `display` | 40 → 84px | 800 · 1.1 | Tiêu đề hero, CTA cuối trang |
+| `h1` | 38 → 76px | 800 · 1.1 | Tiêu đề trang |
+| `h2` | 32 → 56px | 700 · 1.12 | Tiêu đề section |
+| `title` | 26 → 44px | 700 · 1.15 | Tiêu đề phụ (banner mã nguồn mở, "Cách mình làm việc", chứng chỉ) |
+| `h3` | 24px | 700 · 1.25 | Tiêu đề card/panel |
+| `h4` | 20px | 700 · 1.3 | Tiêu đề nhỏ (dịch vụ, bước, kinh nghiệm rút gọn) |
+| `lead` | 19 → 26px | 500 · 1.45 | Dòng chức danh ở hero |
+| `body-xl` / `body-lg` / `body-md` / `body` | 21 / 19 / 17 / 16px | 400 | Đoạn mở đầu About / lead trang / đoạn văn / mặc định |
+| `sm` / `xs` / `2xs` / `3xs` | 15 / 14 / 13 / 12px | — | Nav, meta / chip, nhãn, eyebrow / nhãn danh mục card / tên file code |
 
-Chỉ hai font. Heading phân biệt bằng cỡ, độ đậm, tracking — không thêm font thứ ba.
-Phải kiểm tra lại subset `vietnamese` khi scaffold; nếu thiếu thì loại font đó.
+- Line-height tiêu đề lớn nâng từ 1.05 (mockup) lên **≥ 1.1** để dấu tiếng Việt chồng tầng không chạm dòng trên.
+- Letter-spacing tiêu đề −0.03em. `text-wrap: balance` cho tiêu đề, `pretty` cho đoạn văn.
 
-### 4.2 Thang cỡ chữ
+### 4.3 Nhãn
 
-| Class | Cỡ (mobile → desktop) | Line height | Weight | Tracking | Dùng cho |
-|---|---|---|---|---|---|
-| `text-display` | 40 → 64px | 1.1 | 600 | -0.03em | Tên ở hero Home (1 lần/site) |
-| `text-h1` | 32 → 48px | 1.15 | 600 | -0.025em | Tiêu đề trang (1 lần/trang) |
-| `text-h2` | 24 → 32px | 1.25 | 600 | -0.02em | Tiêu đề section |
-| `text-h3` | 18 → 20px | 1.35 | 600 | -0.01em | Tiêu đề card, mục con |
-| `text-body-lg` | 18px | 1.65 | 400 | 0 | Đoạn dẫn, giới thiệu hero |
-| `text-body` | 16px | 1.65 | 400 | 0 | Nội dung mặc định |
-| `text-prose` | 17px | 1.75 | 400 | 0 | Thân bài blog |
-| `text-sm` | 14px | 1.55 | 400/500 | 0 | Nhãn UI, chữ phụ, nút |
-| `text-xs` + `eyebrow` | 12px | 1.5 | 500 | 0.04em, **mono, in hoa** | Eyebrow, metadata |
-
-**Quy tắc tiếng Việt:** line-height không thấp hơn **1.1 (display)**, **1.15 (heading)**, **1.5 (mọi đoạn văn)** — dấu chồng (ẫ, ỗ, ặ) sẽ bị cắt. Không dùng `overflow: hidden` kèm line-height chặt cho heading.
-
-### 4.3 Độ đậm
-400 (thường), 500 (medium — nhãn UI, nút), 600 (semibold — heading). Không dùng 300, không 700+.
-
-### 4.4 Xuống dòng & cắt chữ
-- Heading: `text-wrap: balance`. Đoạn văn: `text-wrap: pretty` (đã đặt trong base).
-- Độ dài dòng tối đa **68ch** (`max-w-measure` / `container-prose`).
-- Chỉ cắt chữ ở: mô tả card (`line-clamp-3`), tiêu đề card (`line-clamp-2`). Tag luôn xuống dòng, không cắt. Nội dung đầy đủ phải có ở trang chi tiết.
-- URL/code/định danh dài: `overflow-wrap: anywhere` (đã đặt trong base).
-- Không bao giờ cắt tên, chức danh, ngày tháng.
-
----
+- `eyebrow`: 14px · 600 · in hoa · tracking 0.08em · `accent-text` (vd "CÔNG NGHỆ").
+- `label-cat`: 13px · 600 · in hoa · tracking 0.06em · `accent-text` (danh mục trên card dự án).
 
 ## 5. Khoảng cách
 
-Đơn vị gốc **4px** (mặc định Tailwind). Chỉ dùng các bậc:
+Thang spacing Tailwind mặc định (bội số 4px, cho phép nửa bước như `4.5` = 18px). Nhịp chuẩn theo mockup:
 
-`0, 0.5(2px), 1(4), 1.5(6), 2(8), 3(12), 4(16), 5(20), 6(24), 8(32), 10(40), 12(48), 16(64), 20(80), 24(96), 32(128)`
-
-| Ngữ nghĩa | Giá trị | Cách dùng |
-|---|---|---|
-| Icon ↔ chữ | 8px | `gap-2` |
-| Khoảng trong card | 12 / 16px | `gap-3` / `gap-4` |
-| Padding card | 20 → 24px | `card-pad` |
-| Gap lưới | 16 → 24px | `gap-grid` |
-| Tiêu đề section → nội dung | 32 → 40px | `stack-title` |
-| Nhịp section | 64 → 80 → 96px | `section` |
-| Đầu trang dưới header | 48 → 64 → 80px | `page-top` |
-
----
+| Vị trí | Giá trị |
+|---|---|
+| Header | padding dọc 24px |
+| Page header | `page-top` → `pb-14` (56px); gap 18px |
+| Giữa section | `section-gap` (120 / 80px); section thứ nhất dưới hero Home 96px |
+| Tiêu đề section → nội dung | 40px (`mb-10`), dự án nổi bật 48px |
+| Panel | padding 28–36px (`p-7` … `p-9`); gap lưới 20–24px |
+| Card dự án | gap thumb → chữ 18px; lưới 32px, hàng 40px |
+| Footer | `pt-24 pb-10`, đường kẻ trên + `pt-7` |
 
 ## 6. Layout
 
-| Token | Giá trị | Utility | Dùng cho |
-|---|---|---|---|
-| `--container-page` | 72rem (1152px) | `container-page` | Container mặc định |
-| `--container-wide` | 80rem (1280px) | `container-wide` | Chỉ bento Home & gallery dự án |
-| `--container-measure` | 68ch | `container-prose`, `max-w-measure` | Văn bản dài, bài viết |
-| Header | 64px, sticky | `header-safe` (tránh tai thỏ) | |
-| Vùng chạm | ≥ 44×44px | `tap-target` | Mọi phần tử tương tác |
+- Container duy nhất `container-page`: tối đa **1200px**, padding `--gutter`. `container-prose` (68ch) cho bài viết/quyền riêng tư.
+- Header **không sticky** (như mockup), cao ~92px. Desktop (≥ 1024px): logo · 6 link · VI/EN · bộ chọn màu. Dưới 1024px: nút menu mở `<dialog>` toàn màn hình.
+- `<main>` có `overflow-x: clip` để hình đường cong của hero tràn mép phải mà không gây cuộn ngang.
+- Lưới: luôn dùng `grid-fit-*` (auto-fit) thay cho số cột cố định.
 
-### 6.1 Breakpoint (mặc định Tailwind — không tuỳ biến)
+## 7. Bố cục các trang (đã duyệt theo mockup)
 
-| Tên | Từ | Thiết bị | Kiểm tra ở |
-|---|---|---|---|
-| (mặc định) | 0 | Điện thoại | 360px, 390px |
-| `sm` | 640px | Điện thoại ngang | 640px |
-| `md` | 768px | **Tablet** | 768px |
-| `lg` | 1024px | **Desktop** / tablet ngang | 1024px, 1280px |
-| `xl` | 1280px | Desktop lớn | 1440px, 1920px |
-
-### 6.2 Lưới
-
-| Lưới | Điện thoại | Tablet (md) | Desktop (lg+) | Utility |
-|---|---|---|---|---|
-| **Bento** | 1 cột | 2 cột | 4 cột | `bento` |
-| Danh sách card (dự án, bài viết) | 1 | 2 | 3 | `grid-cards` |
-| Nhóm kỹ năng | 1 | 2 | 2 | grid thường |
-| Trang văn bản | 1 cột, tối đa 68ch | | | `container-prose` |
-| Trang chi tiết | 1 | 1 | nội dung 8/12 + aside 4/12 | grid thường |
-
-### 6.3 Các xử lý mobile/tablet có sẵn trong base CSS
-- `min-height: 100dvh` — đúng chiều cao trên trình duyệt di động (thanh địa chỉ co giãn).
-- `env(safe-area-inset-*)` — tránh tai thỏ / thanh cử chỉ.
-- `text-size-adjust: 100%` — iOS không tự phóng chữ khi xoay máy.
-- Input cỡ chữ tối thiểu 16px — iOS không tự zoom khi focus.
-- `scroll-padding-top` — anchor không bị header sticky che.
-- `scrollbar-gutter: stable` — không nhảy layout khi xuất hiện thanh cuộn.
-- Hover chỉ áp dụng trên thiết bị có chuột (`@media (hover: hover)`) — không bị "kẹt hover" trên màn hình cảm ứng.
-- Code block cuộn ngang bên trong khung, trang không bao giờ cuộn ngang.
-
----
-
-## 7. Hệ thống Bento Grid
-
-### 7.1 Kích thước ô (utility `bento-*`, prop `size` của `BentoCard`)
-
-| Kích thước | Điện thoại | Tablet (2 cột) | Desktop (4 cột) |
-|---|---|---|---|
-| `bento-1x1` | full | 1 cột | 1 cột × 1 hàng |
-| `bento-2x1` | full | 2 cột | 2 cột × 1 hàng |
-| `bento-1x2` | full | 1 cột × 2 hàng | 1 cột × 2 hàng |
-| `bento-2x2` | full | 2 cột | 2 cột × 2 hàng |
-| `bento-4x1` | full | 2 cột | 4 cột (cả hàng) |
-
-Mỗi ô dùng thêm `bento-cell` (bề mặt chung) và `card-interactive` nếu click được. Hàng desktop: `minmax(11rem, auto)` — nội dung được phép làm ô cao lên, không bao giờ bị cắt.
-
-### 7.2 Quy tắc
-1. **Thứ tự DOM = thứ tự đọc = thứ tự trên mobile.** Không dùng `order-*` hay `grid-auto-flow: dense`.
-2. Tối đa **8 ô** mỗi lưới; nên 5–7.
-3. Đúng **một ô chính** (`2x2`) mỗi lưới, chứa thông điệp chính.
-4. **Mỗi ô một ý**, tối đa **một CTA**.
-5. Hàng phải khép kín: ở desktop mỗi hàng đủ 4 cột — không để lỗ. Chỉ dùng layout đã duyệt bên dưới.
-6. Các ô giống nhau về radius, viền, padding, nền. Chỉ `variant="accent"` (tối đa 1/lưới) hoặc `variant="muted"` được khác.
-7. Cả ô là link: một thẻ `<a>` duy nhất với `stretched-link`; không lồng phần tử tương tác khác.
-8. Không dùng Bento cho: danh sách dài, thân bài viết, form, timeline.
-
-### 7.3 Layout đã duyệt
-
-**Home (desktop, 4 cột):**
-```
-┌───────────────┬───────┬───────┐
-│ Giới thiệu +  │ Ảnh   │Trạng  │  hàng 1
-│ CTA (2x2)     │ (1x2) │thái   │
-│               │       ├───────┤
-│               │       │ Stack │  hàng 2
-├───────────────┼───────┼───────┤
-│ Dự án nổi bật │Kinh   │  CV   │  hàng 3
-│ (2x1)         │nghiệm │ (1x1) │
-├───────────────┼───────┴───────┤
-│ Bài viết mới  │ CTA liên hệ   │  hàng 4
-│ (2x1)         │ (2x1, accent) │
-└───────────────┴───────────────┘
-```
-Tablet (2 cột): Giới thiệu full → [Ảnh 1x2 | Trạng thái / Stack] → Dự án full → [Kinh nghiệm | CV] → Bài viết full → Liên hệ full. Tất cả hàng đều khép kín.
-Dưới bento: các section thường (danh sách dự án nổi bật, tóm tắt About, bài viết) dùng lưới thường.
-
-**Điểm nổi bật About (desktop):** `2x1 Triết lý` · `1x1 Địa điểm/Ngôn ngữ` · `1x1 Học vấn` · `4x1 Thế mạnh`.
-
-**Tóm tắt Project detail (desktop):** `2x1 Vai trò` · `1x1 Thời gian/Trạng thái` · `1x1 Link` · `4x1 Stack`.
-
-Layout mới = thay đổi design system → ghi vào đây trước.
-
----
+| Trang | Cấu trúc |
+|---|---|
+| Home | Hero 2 cột (đường dọc phát sáng · pill "sẵn sàng" · "Xin chào, mình là **tên**" · chức danh · intro · 2 nút) + code card `developer.ts` → Công nghệ (2 panel Backend/Frontend) → Mình có thể giúp bạn (4 panel đánh số) → Dự án nổi bật (3 card) → Kinh nghiệm (tóm tắt + danh sách 3 dòng) → Banner mã nguồn mở → CTA lớn "Cùng làm một điều thật hay nhé?" |
+| About | Page header → ảnh chân dung trong panel (đĩa màu nhấn) + 3 đoạn + 2 nút → "Cách mình làm việc" (4 bước đánh số) |
+| Skills | Page header + lead → panel theo nhóm (chấm `key-*` + chip) → "Chứng chỉ và học tập" |
+| Projects | Page header → chip lọc → lưới 2 cột card lớn, card chẵn so le xuống 56px (≥ 900px) |
+| Chi tiết dự án | Back link · danh mục · h1 · tóm tắt → 4 ô meta (Vai trò/Thời gian/Công nghệ/Liên kết) → thumb lớn → chip stack → các khối đánh số 01, 02… → Dự án trước / tiếp theo |
+| Experience | Page header → mỗi vai trò một panel (thời gian · chức danh · công ty | mô tả · chip) |
+| Contact | Page header → cột thông tin (Email/Điện thoại/Địa điểm/Mạng xã hội, kẻ dòng) + panel form |
+| Blog, Resume, Privacy, 404 | Không có trong mockup → dùng cùng bộ component (PageHeader, panel, chip, nút) |
 
 ## 8. Radius, viền, độ nổi
 
-| Class | Giá trị | Dùng cho |
+| Token | Giá trị | Dùng cho |
 |---|---|---|
-| `rounded-sm` | 6px | Tag, badge, chip nhỏ, kbd |
-| `rounded-md` | 10px | Nút, input, ảnh inline, code block |
-| `rounded-lg` | 16px | Card, ô bento, dialog |
-| `rounded-full` | 9999px | Avatar, chấm trạng thái, toggle |
+| `rounded-sm` | 12px | Vòng focus |
+| `rounded-md` | 16px | Ô nhập, khối nhỏ trong mock |
+| `rounded-lg` | 22px | Code card, cửa sổ mock |
+| `rounded-xl` | 28px | **Panel**, thumb |
+| `rounded-2xl` | 36px | Ảnh lớn, chân dung, form |
+| `rounded-3xl` | 40px | Khối CTA cuối Home |
+| `rounded-full` | — | Nút, chip, avatar, chấm |
 
-- Radius lồng nhau: radius trong = radius ngoài − padding (tối thiểu `sm`).
-- Viền: **chỉ 1px**. Focus ring: 2px.
-
-| Shadow | Sáng | Tối | Dùng cho |
-|---|---|---|---|
-| (không) | none | none | Card mặc định |
-| `shadow-sm` | `0 1px 2px rgb(0 0 0 / .05)` | trong suốt (dùng `border-strong`) | Card tương tác khi hover |
-| `shadow-overlay` | `0 12px 32px -8px rgb(0 0 0 / .16)` | `… / .6` | Menu, dialog, toast |
+- Viền: `border border-line` (1px) cho panel; `edge-bold` (1.5px) cho nút ghost, nút tròn, chọn ngôn ngữ, popover, ô nhập.
+  - Lưu ý: utility 1.5px **không được** đặt tên bắt đầu bằng `border-` (tailwind-merge sẽ coi là màu viền và xoá mất).
+- Bóng: `shadow-pop` (popover), `shadow-float` (code card), `shadow-mock` (cửa sổ mock), `shadow-glow` (card dự án khi hover), `shadow-cta` (nút chính khi hover), `shadow-dot` (chấm hero).
+- Đốm sáng trang trí: `glow-blob` + `opacity-16/20` + `blur-3xl` sau banner/CTA.
 
 ### Lớp z-index
-
-| Utility | Giá trị | Dùng cho |
-|---|---|---|
-| (base) | 0 | Nội dung |
-| `z-raised` | 10 | Lớp phủ stretched-link, aside sticky |
-| `z-header` | 40 | Header sticky |
-| `z-dropdown` | 50 | Menu/popover |
-| `z-overlay` | 60 | Nền mờ dialog / mobile nav |
-| `z-modal` | 70 | Dialog |
-| `z-toast` | 80 | Toast |
-| `z-skip` | 90 | Link "Bỏ qua đến nội dung" |
-
----
+`z-raised` 3 (header) · `z-dropdown` 10 (popover màu) · `z-modal` 70 (menu mobile) · `z-skip` 90 (skip link).
 
 ## 9. Icon
 
-- **Icon UI:** `lucide-react`, 16px (inline), 20px (nút/nav), 24px (nổi bật). `strokeWidth={1.75}`, màu `currentColor`.
-- **Icon thương hiệu/công nghệ** (GitHub, LinkedIn, React, .NET…): `simple-icons` (Lucide đã bỏ icon thương hiệu), đơn sắc `currentColor`, cùng kích thước.
-- Icon cạnh chữ: `gap-2`, căn giữa dọc. Nút chỉ có icon bắt buộc `aria-label`.
-- Không dùng emoji trong giao diện.
-
----
+Lucide, nét 2px, cỡ 18px trong nút (`[&_svg]:size-4.5`). Dùng: mũi tên (→, ←, ↗), menu, đóng, khoá (dự án nội bộ), tải xuống. Không dùng logo thương hiệu vẽ tay; chip công nghệ là chữ.
 
 ## 10. Chuyển động
 
-| Token | Giá trị | Utility | Dùng cho |
+| Utility | Hiệu ứng | Ghi chú |
+|---|---|---|
+| `view` (trên `<main>`) | Con trực tiếp "rise" (mờ → rõ, trượt 22px) 0.75s, so le 60ms | Chạy mỗi lần vào trang |
+| `anim-sway` | Đường cong hero xoay ±2° 16s | Trang trí |
+| `anim-grow` | Đường dọc hero mọc từ trên xuống | 1.2s |
+| `anim-bob` | Code card nhấp nhô 10px, 6s | |
+| `anim-live` | Chấm "sẵn sàng" toả vòng | 2.4s |
+| `anim-pop` | Popover bảng màu xuất hiện | 0.3s |
+| `btn-motion` | Nút nâng 3px khi hover | |
+| `project-card` | Card nâng 8px, thumb viền accent + glow, phần trong phóng 1.05, mũi tên bật lên | Chỉ trên thiết bị có hover |
+
+Đường cong duy nhất `--ease-out: cubic-bezier(.2,.7,.2,1)`. Đổi bảng màu chuyển nền/chữ trong 0.45s. `prefers-reduced-motion: reduce` → mọi animation/transition gần như tức thì.
+
+## 11. Trạng thái tương tác
+
+| Phần tử | Hover | Focus (bàn phím) | Đang chọn |
 |---|---|---|---|
-| `--duration-fast` | 120ms | `duration-fast` | Đổi màu/viền/opacity khi hover, focus |
-| `--duration-base` | 200ms | `duration-base` | Transform nhỏ, mở menu |
-| `--duration-slow` | 320ms | `duration-slow` | Mở dialog/mobile nav |
-| `--ease-out` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | `ease-out` | Xuất hiện |
-| `--ease-in-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | `ease-in-out` | Đổi trạng thái |
+| Link nav | chữ → `fg`, gạch dưới 50% | vòng 3px `accent-text`, offset 3px | `aria-current`, gạch dưới 100% |
+| Nút chính (`btn-main`) | nâng 3px + `shadow-cta` (giữ đúng như mockup — chủ dự án đã duyệt) | vòng focus | — |
+| Nút ghost (`btn-ghost`) | nâng 3px, viền → `accent`, nền `accent-soft`, quầng `--p-glow`; mũi tên trượt theo hướng (→ sang phải, ← sang trái). **Không** đảo màu toàn bộ (v2.1, theo phản hồi "chỉ sáng lên") | vòng focus | — |
+| Nút tròn (`icon-btn`) / chip link | viền `accent` + nền `accent-soft`; nút tròn xoay 14°, chip nâng 2px | vòng focus | — |
+| Chip lọc | viền `accent`, nâng 2px | vòng focus | `aria-pressed="true"` → nền `accent` |
+| Panel | viền `line-strong` (`panel-row`: viền `accent`) | — | — |
+| Card dự án | xem §10 | vòng focus quanh **cả card** | — |
+| Ô nhập | — | viền `accent` + quầng `--p-glow` 3px | — |
 
-- Chỉ animate `opacity`, `transform`, `color`, `background-color`, `border-color`.
-- Card tương tác khi hover: viền → `border-strong`, nhích lên tối đa 2px, `shadow-sm` (chỉ theme sáng).
-- Mũi tên trong link/CTA nhích `translateX(2px)` khi hover.
-- v1 không có animation theo scroll. Không dùng thư viện animation (chỉ CSS).
-- `prefers-reduced-motion: reduce`: duration về ~0, tắt mọi transform/animation (đã cài trong token + base).
-
----
-
-## 11. Trạng thái tương tác (mọi phần tử tương tác)
-
-| Trạng thái | Cách thể hiện |
-|---|---|
-| Hover | Đổi màu/viền (fast). Chỉ thiết bị có chuột. |
-| Focus-visible | `outline: 2px solid accent; outline-offset: 2px` — không bao giờ xoá mà không thay thế (đã đặt trong base) |
-| Active | Đậm hơn (accent-hover) / scale(0.98) với nút |
-| Disabled | `opacity: .5`, `cursor: not-allowed`, không đổi khi hover, `disabled`/`aria-disabled` |
-| Loading | Spinner (`Loader2` xoay) thay icon đầu, giữ nhãn, nút bị disable, `aria-busy` |
-| Đang chọn (chip/nav) | nền `accent-soft` + chữ `accent`, `aria-pressed`/`aria-current` |
-| Không hợp lệ (input) | viền `error` + thông báo kèm icon bên dưới, `aria-invalid`, `aria-describedby` |
-
----
+Vùng chạm tối thiểu 44px (`tap-target`, `min-h-11`).
 
 ## 12. Hình ảnh
 
-- Định dạng: AVIF/WebP qua `next/image`; file gốc PNG/JPG trong `public/images`.
-- Tỷ lệ: ảnh bìa dự án **16:10**, avatar **1:1** (hoặc 4:5 trong ô hero `1x2`), ảnh OG 1200×630.
-- Thiếu ảnh: khung `surface-muted` với chữ viết tắt tên dự án (font mono) — không ảnh vỡ, không ảnh stock.
-- Ảnh chụp dự án công ty: chỉ khi được cho phép rõ ràng (xem CONTENT_GUIDE).
-- Ảnh có ý nghĩa phải có `alt`; ảnh trang trí → `alt=""`.
-
----
+- Ảnh chân dung: `/public/assets/images/profile/avatar.webp`, tỉ lệ 4:5, `next/image`. Cắt tròn (`Avatar`, căn `object-top`) để dùng ở header, menu mobile, footer — thay cho chữ cái "V" (vẫn là fallback khi không có ảnh).
+- Thumbnail dự án: dùng `cover` (16:10, 1600×1000) nếu có; không có → **minh hoạ trừu tượng** `ProjectThumb` theo `tint-N`/`key-N`. Dự án PRIVATE chỉ được dùng **minh hoạ chung**, không ảnh chụp hệ thống.
+- Trang chi tiết: ảnh bìa lớn → khối "Video giới thiệu" (`<video controls preload="metadata">`, không tự phát) → các khối nội dung → "Hình ảnh" (`screenshots` + chú thích). Video và screenshots **chỉ dành cho PUBLIC** (schema chặn).
+- Card có video hiện nhãn "▶ Video" ở góc dưới trái ảnh.
+- Ảnh/video mẫu hiện tại có nhãn "ẢNH MẪU" — phải thay trước khi public (xem CONTENT_GUIDE §2).
 
 ## 13. Kiểm soát thay đổi
 
-| Loại thay đổi | Quy trình |
-|---|---|
-| Dùng token/component có sẵn | Tự do |
-| Thêm variant component | Ghi vào COMPONENT_GUIDELINES → triển khai |
-| Token, màu, font, radius, shadow, layout pattern mới | Đề xuất kèm lý do → **chủ dự án duyệt** → cập nhật file này → triển khai |
-| Phong cách mới / thiết kế lại | **Cấm nếu không có phê duyệt rõ ràng** |
-
-Lịch sử thay đổi:
-- v0.1 (2026-11-14) — bản nháp đầu.
-- v0.2 (2026-11-14) — chuyển sang tiếng Việt; thêm CSS tổng (`tokens.css`, `globals.css`) với `light-dark()`, reset palette Tailwind, token layout responsive, utility bento/container; đã biên dịch thử thành công.
+Mọi thay đổi token, font, màu, bảng màu, layout pattern → cập nhật tài liệu này + `COMPONENT_GUIDELINES.md` + ghi vào ROADMAP, và được chủ dự án duyệt trước khi merge.

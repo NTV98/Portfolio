@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Portfolio Nguyễn Tuấn Vũ</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#0B0A17}
+html:has(.pf[data-palette="blue"]) body{background:#0A0E1A}
+html:has(.pf[data-palette="teal"]) body{background:#08110F}
+html:has(.pf[data-palette="orange"]) body{background:#120C08}
+html:has(.pf[data-palette="pink"]) body{background:#140A11}
+*{box-sizing:border-box}
+.pf[data-palette="violet"]{--bg:#0B0A17;--bg2:#0F0D20;--surface:#14122A;--surface2:#1B1838;--line:#26233F;--line2:#3B3766;--muted:#A9A6C4;--b1:#6D4AFF;--atext:#A996FF;--glow:rgba(124,92,255,.35);--t1:#1B1740;--t2:#2A1636;--t3:#0F2A34;--t4:#2B2410;--t5:#12261C;--t6:#2A1A1A;--b2:#E06BC0;--b3:#35C7D9;--b4:#E8B84A;--b5:#35D399;--b6:#F0795A;--text:#FFFFFF;--shadow:rgba(0,0,0,.8)}
+.pf[data-palette="blue"]{--bg:#0A0E1A;--bg2:#0D1322;--surface:#121A2E;--surface2:#19243E;--line:#222E4A;--line2:#36456B;--muted:#A6B0C9;--b1:#2563EB;--atext:#8DB4FF;--glow:rgba(59,130,246,.35);--t1:#12203F;--t2:#2A1636;--t3:#0F2A34;--t4:#2B2410;--t5:#12261C;--t6:#2A1A1A;--b2:#E06BC0;--b3:#35C7D9;--b4:#E8B84A;--b5:#35D399;--b6:#F0795A;--text:#FFFFFF;--shadow:rgba(0,0,0,.8)}
+.pf[data-palette="teal"]{--bg:#08110F;--bg2:#0B1614;--surface:#101D1B;--surface2:#162826;--line:#1E3330;--line2:#2F4F4A;--muted:#9FBDB7;--b1:#0A7A68;--atext:#5EE0C2;--glow:rgba(20,184,150,.32);--t1:#0E2A26;--t2:#2A1636;--t3:#0F2A34;--t4:#2B2410;--t5:#12261C;--t6:#2A1A1A;--b2:#E06BC0;--b3:#35C7D9;--b4:#E8B84A;--b5:#35D399;--b6:#F0795A;--text:#FFFFFF;--shadow:rgba(0,0,0,.8)}
+.pf[data-palette="orange"]{--bg:#120C08;--bg2:#17100B;--surface:#1F1510;--surface2:#2A1D15;--line:#3A2A20;--line2:#55402F;--muted:#C4B2A4;--b1:#C2410C;--atext:#FFA774;--glow:rgba(249,115,22,.3);--t1:#2E1A0E;--t2:#2A1636;--t3:#0F2A34;--t4:#2B2410;--t5:#12261C;--t6:#2A1A1A;--b2:#E06BC0;--b3:#35C7D9;--b4:#E8B84A;--b5:#35D399;--b6:#F0795A;--text:#FFFFFF;--shadow:rgba(0,0,0,.8)}
+.pf[data-palette="pink"]{--bg:#140A11;--bg2:#190D15;--surface:#22121C;--surface2:#2E1927;--line:#3D2434;--line2:#5A3750;--muted:#C9A9BC;--b1:#BE185D;--atext:#FF8FC0;--glow:rgba(236,72,153,.3);--t1:#2E1326;--t2:#2A1636;--t3:#0F2A34;--t4:#2B2410;--t5:#12261C;--t6:#2A1A1A;--b2:#E06BC0;--b3:#35C7D9;--b4:#E8B84A;--b5:#35D399;--b6:#F0795A;--text:#FFFFFF;--shadow:rgba(0,0,0,.8)}
+.pf[data-palette="light"]{--bg:#F5F6F8;--bg2:#ECEEF2;--surface:#FFFFFF;--surface2:#F0F2F6;--line:#E2E5EA;--line2:#C7CCD6;--text:#11141B;--muted:#565D6C;--b1:#2447F5;--atext:#2447F5;--glow:rgba(36,71,245,.25);--t1:#DCE4FF;--t2:#FFE3D6;--t3:#D5F0E3;--t4:#F3E8C8;--t5:#D5F0E3;--t6:#FBE0DA;--b2:#C23C9B;--b3:#1593A8;--b4:#A87A0E;--b5:#0E8F6A;--b6:#D9532F;--shadow:rgba(17,20,27,.25)}
+html:has(.pf[data-palette="light"]) body{background:#F5F6F8}
+.pf{font-family:'Poppins',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden;position:relative;transition:background .45s ease,color .45s ease}
+.pf *{transition-property:background-color,border-color,color,fill,stroke,box-shadow,transform,opacity;transition-duration:.35s;transition-timing-function:cubic-bezier(.2,.7,.2,1)}
+.pf h1,.pf h2,.pf h3{font-family:'Poppins',system-ui,sans-serif;margin:0;font-weight:700;letter-spacing:-0.03em;text-wrap:balance}
+.pf p{margin:0;text-wrap:pretty}
+.pf button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.pf a{color:inherit;text-decoration:none}
+.pf button:focus-visible,.pf a:focus-visible,.pf .field:focus-visible{outline:3px solid var(--atext);outline-offset:3px;border-radius:12px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes sway{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(2deg) scale(1.03)}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(53,211,153,.55)}70%{box-shadow:0 0 0 10px rgba(53,211,153,0)}}
+@keyframes spin{from{transform:rotate(-90deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
+.view>*{animation:rise .75s cubic-bezier(.2,.7,.2,1) both}
+.view>*:nth-child(2){animation-delay:.06s}.view>*:nth-child(3){animation-delay:.12s}.view>*:nth-child(4){animation-delay:.18s}.view>*:nth-child(5){animation-delay:.24s}.view>*:nth-child(6){animation-delay:.3s}.view>*:nth-child(7){animation-delay:.36s}.view>*:nth-child(8){animation-delay:.42s}
+.art{animation:sway 16s ease-in-out infinite;transform-origin:60% 50%;will-change:transform}
+.vline{transform-origin:top;animation:grow 1.2s cubic-bezier(.2,.7,.2,1) both .2s}
+.bob{animation:bob 6s ease-in-out infinite;will-change:transform}
+.live{animation:pulse 2.4s ease-out infinite}
+.themeicon{animation:spin .55s cubic-bezier(.2,.7,.2,1) both}
+.nav .lnk{position:relative;padding:8px 2px;min-height:44px;display:inline-flex;align-items:center;color:var(--muted);font-size:15px;font-weight:500}
+.nav .lnk:hover{color:var(--text)}
+.nav .lnk:after{content:"";position:absolute;left:0;bottom:4px;height:2px;width:100%;background:var(--b1);border-radius:2px;transform:scaleX(0);transform-origin:left}
+.nav .lnk:hover:after{transform:scaleX(.5)}
+.nav .lnk.on{color:var(--text)}
+.nav .lnk.on:after{transform:scaleX(1)}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line2);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.icon-btn:hover{background:var(--text);color:var(--bg);border-color:var(--text);transform:rotate(14deg)}
+.picker{position:relative}
+.pop{position:absolute;right:0;top:52px;z-index:10;display:flex;padding:4px 6px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line2);box-shadow:0 20px 40px -16px var(--shadow);animation:rise .3s cubic-bezier(.2,.7,.2,1) both}
+.sw{width:36px;height:44px;display:inline-flex;align-items:center;justify-content:center}
+.sw span{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(128,128,128,.45)}
+.sw:hover span{transform:scale(1.2)}
+.sw.on span{box-shadow:inset 0 0 0 1px rgba(128,128,128,.45),0 0 0 2px var(--surface),0 0 0 4px var(--text)}
+.btn:hover{transform:translateY(-3px)}
+.btn-main{background:var(--b1);color:#fff}
+.btn-main:hover{box-shadow:0 16px 34px -10px var(--b1)}
+.btn-ghost{border:1.5px solid var(--line2)}
+.btn-ghost:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
+.card:hover{transform:translateY(-8px)}
+.card .thumb{overflow:hidden;border:1px solid var(--line)}
+.card:hover .thumb{border-color:var(--b1);box-shadow:0 30px 60px -30px var(--b1)}
+.card .inner{transition-duration:.8s}
+.card:hover .inner{transform:scale(1.05)}
+.card:hover .arrow{transform:translate(4px,-4px);background:var(--b1);border-color:var(--b1);color:#fff}
+.t1{background:var(--t1)}.t2{background:var(--t2)}.t3{background:var(--t3)}.t4{background:var(--t4)}.t5{background:var(--t5)}.t6{background:var(--t6)}
+.k1{background:var(--b1)}.k2{background:var(--b2)}.k3{background:var(--b3)}.k4{background:var(--b4)}.k5{background:var(--b5)}.k6{background:var(--b6)}
+.chip{padding:8px 16px;border-radius:999px;border:1px solid var(--line2);font-size:14px;font-weight:500;color:var(--text);min-height:36px;display:inline-flex;align-items:center}
+button.chip{min-height:44px;padding:8px 20px}
+button.chip:hover{border-color:var(--b1);transform:translateY(-2px)}
+.chip.on{background:var(--b1);border-color:var(--b1);color:#fff}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:28px}
+.panel:hover{border-color:var(--line2)}
+.field{width:100%;min-height:52px;padding:14px 18px;border-radius:16px;border:1.5px solid var(--line2);background:var(--bg2);color:var(--text);font:inherit;font-size:16px}
+.field::placeholder{color:var(--muted)}
+.field:focus{outline:none;border-color:var(--b1);box-shadow:0 0 0 3px var(--glow)}
+.social:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
+.row:hover{border-color:var(--b1)}
+.lang{color:var(--atext)}
+@media (min-width:900px){.stagger:nth-child(even){margin-top:56px}}
+@media (max-width:700px){.art{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.view>*,.art,.vline,.bob,.live,.themeicon{animation:none}.pf *{transition:none}}
+</style>
+</helmet>
+
+<div class="pf" data-palette="{{palette}}" style="width: 100%">
+
+  <!-- NAV -->
+  <header class="nav" style="position: relative; z-index: 3; max-width: 1200px; margin: 0 auto; padding: 24px clamp(20px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+    <button onClick="{{goHome}}" aria-label="Về trang chủ" style="display: flex; align-items: center; gap: 12px; min-height: 44px; font-weight: 600; font-size: 16px">
+      <span style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--atext); color: var(--atext); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">V</span>
+      Nguyễn Tuấn Vũ
+    </button>
+    <nav aria-label="Menu chính" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 26px">
+      <sc-for list="{{navItems}}" as="n" hint-placeholder-count="6">
+        <button class="lnk {{n.cls}}" onClick="{{n.go}}">{{n.label}}</button>
+      </sc-for>
+      <div class="picker">
+        <button class="icon-btn" onClick="{{togglePicker}}" aria-label="Chọn màu chủ đề" aria-expanded="{{pickerOpen}}"><span style="width: 20px; height: 20px; border-radius: 50%; background: {{currentColor}}; box-shadow: inset 0 0 0 1px rgba(128,128,128,.45)"></span></button>
+        <sc-if value="{{pickerOpen}}" hint-placeholder-val="{{ false }}">
+          <div class="pop" role="group" aria-label="Màu chủ đề">
+            <sc-for list="{{palettes}}" as="c" hint-placeholder-count="6">
+              <button class="sw {{c.cls}}" onClick="{{c.pick}}" aria-label="{{c.label}}"><span style="background: {{c.color}}"></span></button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+  <main class="view">
+
+    <section style="position: relative; max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap: 48px; align-items: center">
+      <div aria-hidden="true" style="position: absolute; right: -120px; top: -60px; width: 720px; height: 720px; pointer-events: none">
+        <svg class="art" viewBox="0 0 600 700" width="100%" height="100%" fill="none" aria-hidden="true"><path d="{{art}}" stroke="var(--b1)" stroke-opacity="0.5" stroke-width="1"></path></svg>
+      </div>
+      <div style="position: relative; display: flex; gap: 26px; align-items: stretch">
+        <div aria-hidden="true" style="display: flex; flex-direction: column; align-items: center; flex: none">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background: var(--b1); box-shadow: 0 0 24px var(--b1)"></span>
+          <span class="vline" style="flex: 1; width: 3px; border-radius: 2px; background: linear-gradient(to bottom, var(--b1), transparent)"></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 22px; padding-bottom: 8px">
+          <div style="display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; font-weight: 500; color: var(--muted)">
+            <span class="live" style="width: 8px; height: 8px; border-radius: 50%; background: #35D399"></span>
+            Sẵn sàng cho cơ hội mới
+          </div>
+          <h1 style="font-size: clamp(40px, 6.6vw, 84px); line-height: 1.05; font-weight: 800">Xin chào, mình là <span style="color: var(--b1)">Nguyễn Tuấn Vũ</span></h1>
+          <p style="font-size: clamp(19px, 2.2vw, 26px); line-height: 1.4; font-weight: 500; max-width: 560px">Lập trình viên Full-stack: C#, Node.js, Angular, ReactJS, Next.js.</p>
+          <p style="font-size: 17px; color: var(--muted); max-width: 520px">Mình làm API ổn định và web nhanh, dễ bảo trì, từ dự án cá nhân đến sản phẩm công ty.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 6px">
+            <button class="btn btn-main" onClick="{{goProjects}}" style="display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">
+              Xem dự án
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+            <button class="btn btn-ghost" onClick="{{goContact}}" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">Liên hệ mình</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: relative; display: flex; justify-content: center; padding: 20px 0">
+        <div class="bob mono" style="width: min(460px, 100%); border-radius: 22px; background: #0F0D20; border: 1px solid #2E2A52; box-shadow: 0 40px 80px -30px var(--shadow); overflow: hidden; font-size: 14px; line-height: 1.8; color: #E4E2F3">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 14px 18px; border-bottom: 1px solid #26233F">
+            <span style="width: 11px; height: 11px; border-radius: 50%; background: #F0795A"></span>
+            <span style="width: 11px; height: 11px; border-radius: 50%; background: #E8B84A"></span>
+            <span style="width: 11px; height: 11px; border-radius: 50%; background: #35D399"></span>
+            <span style="margin-left: 10px; font-size: 12px; color: #8F8BB0">developer.ts</span>
+          </div>
+          <div style="padding: 20px 22px 24px; display: flex; flex-direction: column; white-space: pre-wrap">
+            <span><span style="color: #C792EA">const</span> dev = <span style="color: #8F8BB0">{</span></span>
+            <span>  name: <span style="color: #35D399">"Nguyễn Tuấn Vũ"</span>,</span>
+            <span>  backend: [<span style="color: #35D399">"C#"</span>, <span style="color: #35D399">"Node.js"</span>],</span>
+            <span>  frontend: [</span>
+            <span>    <span style="color: #35D399">"Angular"</span>, <span style="color: #35D399">"ReactJS"</span>,</span>
+            <span>    <span style="color: #35D399">"Next.js"</span>,</span>
+            <span>  ],</span>
+            <span>  openToWork: <span style="color: #F78C6C">true</span>,</span>
+            <span><span style="color: #8F8BB0">}</span>;</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Công nghệ" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 48px) 0">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 40px">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Công nghệ</span>
+          <h2 style="font-size: clamp(32px, 4.6vw, 56px); line-height: 1.08">Bộ công cụ mình dùng hằng ngày</h2>
+        </div>
+        <button class="btn btn-ghost" onClick="{{goSkills}}" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; font-weight: 600">Xem tất cả kỹ năng</button>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 24px">
+        <sc-for list="{{stackCards}}" as="s" hint-placeholder-count="2">
+          <div class="panel" style="padding: 36px; display: flex; flex-direction: column; gap: 22px">
+            <div style="display: flex; align-items: center; gap: 14px">
+              <span class="k{{s.k}}" style="width: 12px; height: 12px; border-radius: 50%"></span>
+              <h3 style="font-size: 26px">{{s.title}}</h3>
+            </div>
+            <p style="color: var(--muted)">{{s.text}}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <sc-for list="{{s.items}}" as="it" hint-placeholder-count="4">
+                <span class="chip">{{it.name}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Dịch vụ" style="max-width: 1200px; margin: 0 auto; padding: 120px clamp(20px, 4vw, 48px) 0">
+      <h2 style="font-size: clamp(32px, 4.6vw, 56px); line-height: 1.08; margin-bottom: 40px; max-width: 760px">Mình có thể giúp bạn</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 20px">
+        <sc-for list="{{services}}" as="v" hint-placeholder-count="4">
+          <div class="panel row" style="padding: 28px; display: flex; flex-direction: column; gap: 14px">
+            <span class="mono" style="font-size: 14px; color: var(--atext)">{{v.no}}</span>
+            <h3 style="font-size: 21px; line-height: 1.25">{{v.title}}</h3>
+            <p style="color: var(--muted); font-size: 15px">{{v.text}}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Dự án nổi bật" style="max-width: 1200px; margin: 0 auto; padding: 120px clamp(20px, 4vw, 48px) 0">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 48px">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Dự án nổi bật</span>
+          <h2 style="font-size: clamp(32px, 4.6vw, 56px); line-height: 1.08">Cá nhân, công ty và mã nguồn mở</h2>
+        </div>
+        <button class="btn btn-ghost" onClick="{{goProjects}}" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; font-weight: 600">Tất cả dự án</button>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 32px">
+        <sc-for list="{{featured}}" as="p" hint-placeholder-count="3">
+          <button class="card" onClick="{{p.open}}" style="display: flex; flex-direction: column; gap: 18px; width: 100%">
+            <div class="thumb {{p.tcls}}" style="height: 260px; border-radius: 26px; position: relative">
+              <div class="inner" style="position: absolute; inset: 0">
+                <div style="position: absolute; left: 12%; right: 12%; top: 16%; bottom: -8%; border-radius: 18px 18px 0 0; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 24px 50px -24px var(--shadow)">
+                  <div style="display: flex; gap: 6px; padding: 12px 14px"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--line2)"></span><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--line2)"></span><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--line2)"></span></div>
+                  <div class="{{p.kcls}}" style="margin: 4px 18px 0; height: 12px; width: 44%; border-radius: 8px"></div>
+                  <div style="margin: 12px 18px 0; height: 9px; width: 72%; border-radius: 8px; background: var(--line)"></div>
+                  <div style="margin: 9px 18px 0; height: 9px; width: 56%; border-radius: 8px; background: var(--line)"></div>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 14px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <span class="lang" style="font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase">{{p.catLabel}}</span>
+                <h3 style="font-size: 22px; line-height: 1.2">{{p.title}}</h3>
+                <p style="color: var(--muted); font-size: 14px">{{p.stackText}}</p>
+              </div>
+              <span class="arrow" style="flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line2); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></span>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Kinh nghiệm" style="max-width: 1200px; margin: 0 auto; padding: 120px clamp(20px, 4vw, 48px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 56px">
+      <div style="display: flex; flex-direction: column; gap: 22px; align-items: flex-start">
+        <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Kinh nghiệm</span>
+        <h2 style="font-size: clamp(32px, 4.6vw, 56px); line-height: 1.08">Hành trình làm nghề</h2>
+        <p style="color: var(--muted); font-size: 17px; max-width: 440px">[VIẾT 1–2 CÂU TÓM TẮT: số năm kinh nghiệm, lĩnh vực đã làm, điều bạn tự hào nhất.]</p>
+        <button class="btn btn-ghost" onClick="{{goExp}}" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; font-weight: 600">Xem chi tiết</button>
+      </div>
+      <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+        <sc-for list="{{expShort}}" as="e" hint-placeholder-count="3">
+          <li style="display: grid; grid-template-columns: 140px 1fr; gap: 20px; padding: 26px 0; border-top: 1px solid var(--line)">
+            <span class="mono" style="font-size: 14px; color: var(--atext); padding-top: 4px">{{e.period}}</span>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <h3 style="font-size: 20px">{{e.role}}</h3>
+              <p style="color: var(--muted); font-size: 15px">{{e.company}}</p>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+    </section>
+
+    <section aria-label="Mã nguồn mở" style="max-width: 1200px; margin: 0 auto; padding: 120px clamp(20px, 4vw, 48px) 0">
+      <div class="panel" style="padding: clamp(28px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px; position: relative; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; right: -80px; top: -120px; width: 320px; height: 320px; border-radius: 50%; background: var(--b1); opacity: .16; filter: blur(60px); pointer-events: none"></div>
+        <div style="position: relative; display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+          <h2 style="font-size: clamp(26px, 3.4vw, 40px); line-height: 1.15">Đóng góp cho cộng đồng mã nguồn mở</h2>
+          <p style="color: var(--muted)">Các thư viện, công cụ và bản vá mình chia sẻ công khai trên GitHub. [THAY BẰNG MÔ TẢ THẬT NẾU CÓ.]</p>
+        </div>
+        <button class="btn btn-main" onClick="{{goOss}}" style="position: relative; display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">Xem mã nguồn mở</button>
+      </div>
+    </section>
+
+    <section style="max-width: 1200px; margin: 0 auto; padding: 120px clamp(20px, 4vw, 48px) 0">
+      <div style="padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 64px); border-radius: 40px; background: var(--surface); border: 1px solid var(--line); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 28px; align-items: flex-start">
+        <div aria-hidden="true" style="position: absolute; left: -120px; bottom: -160px; width: 440px; height: 440px; border-radius: 50%; background: var(--b1); opacity: .2; filter: blur(80px); pointer-events: none"></div>
+        <h2 style="position: relative; font-size: clamp(36px, 6vw, 80px); line-height: 1.04; max-width: 860px">Cùng làm một điều thật hay nhé?</h2>
+        <button class="btn btn-main" onClick="{{goContact}}" style="position: relative; display: inline-flex; align-items: center; min-height: 56px; padding: 0 32px; border-radius: 999px; font-weight: 600; font-size: 17px">Gửi lời nhắn</button>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ ABOUT ============ -->
+  <sc-if value="{{isAbout}}" hint-placeholder-val="{{ false }}">
+  <main class="view">
+    <section style="max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 56px; display: flex; flex-direction: column; gap: 18px">
+      <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Giới thiệu</span>
+      <h1 style="font-size: clamp(38px, 6vw, 76px); line-height: 1.05; font-weight: 800; max-width: 900px">Người đứng sau những dòng code</h1>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 56px; align-items: center">
+      <div class="panel" style="position: relative; min-height: 500px; border-radius: 36px; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; width: 360px; height: 360px; border-radius: 50%; background: var(--b1); right: -100px; top: -100px; opacity: .75"></div>
+        <div style="position: absolute; left: 30px; bottom: 26px; right: 30px">
+          <div style="font-weight: 600; font-size: 20px">[ẢNH CHÂN DUNG CỦA BẠN]</div>
+          <div style="font-size: 14px; color: var(--muted); margin-top: 4px">Thay bằng ảnh thật, tỉ lệ 4:5</div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 22px; align-items: flex-start">
+        <p style="font-size: 21px; line-height: 1.55">Mình là Nguyễn Tuấn Vũ, lập trình viên Full-stack. Mình làm backend với C# và Node.js, làm frontend với Angular, ReactJS và Next.js.</p>
+        <p style="font-size: 17px; color: var(--muted)">[ĐOẠN 2: bạn bắt đầu nghề thế nào, đã làm ở đâu, loại sản phẩm bạn thích làm nhất.]</p>
+        <p style="font-size: 17px; color: var(--muted)">[ĐOẠN 3: cách bạn làm việc nhóm, điều bạn đang học, sở thích ngoài công việc.]</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px">
+          <button class="btn btn-main" onClick="{{goContact}}" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">Làm việc cùng mình</button>
+          <button class="btn btn-ghost" onClick="{{goExp}}" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">Xem kinh nghiệm</button>
+        </div>
+      </div>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 120px clamp(20px, 4vw, 48px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 56px">
+      <div style="display: flex; flex-direction: column; gap: 18px">
+        <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Cách mình làm việc</span>
+        <h2 style="font-size: clamp(30px, 4.2vw, 50px); line-height: 1.1">Chăm chút từng chi tiết nhỏ, vì chúng tạo nên cảm giác lớn.</h2>
+      </div>
+      <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+          <li style="display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding: 26px 0; border-top: 1px solid var(--line)">
+            <span class="mono" style="font-size: 16px; color: var(--atext)">{{s.no}}</span>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <h3 style="font-size: 22px">{{s.title}}</h3>
+              <p style="color: var(--muted)">{{s.text}}</p>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ SKILLS ============ -->
+  <sc-if value="{{isSkills}}" hint-placeholder-val="{{ false }}">
+  <main class="view">
+    <section style="max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 56px; display: flex; flex-direction: column; gap: 18px">
+      <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Kỹ năng</span>
+      <h1 style="font-size: clamp(38px, 6vw, 76px); line-height: 1.05; font-weight: 800; max-width: 900px">Từ máy chủ đến giao diện</h1>
+      <p style="font-size: 19px; color: var(--muted); max-width: 640px">Mình làm được cả hai đầu của một ứng dụng web: xử lý dữ liệu phía sau và dựng trải nghiệm phía trước.</p>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 24px">
+      <sc-for list="{{skillGroups}}" as="g" hint-placeholder-count="4">
+        <div class="panel" style="padding: 32px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span class="k{{g.k}}" style="width: 12px; height: 12px; border-radius: 50%"></span>
+            <h3 style="font-size: 24px">{{g.name}}</h3>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px">
+            <sc-for list="{{g.items}}" as="it" hint-placeholder-count="5">
+              <span class="chip">{{it.name}}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 48px) 0">
+      <h2 style="font-size: clamp(28px, 3.6vw, 44px); line-height: 1.1; margin-bottom: 28px">Chứng chỉ và học tập</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px">
+        <div class="panel row" style="padding: 26px; display: flex; flex-direction: column; gap: 6px"><span class="mono" style="font-size: 14px; color: var(--atext)">[NĂM]</span><h3 style="font-size: 20px">[TÊN CHỨNG CHỈ / KHÓA HỌC]</h3><p style="color: var(--muted); font-size: 15px">[Nơi cấp]</p></div>
+        <div class="panel row" style="padding: 26px; display: flex; flex-direction: column; gap: 6px"><span class="mono" style="font-size: 14px; color: var(--atext)">[NĂM]</span><h3 style="font-size: 20px">[TÊN CHỨNG CHỈ / KHÓA HỌC]</h3><p style="color: var(--muted); font-size: 15px">[Nơi cấp]</p></div>
+        <div class="panel row" style="padding: 26px; display: flex; flex-direction: column; gap: 6px"><span class="mono" style="font-size: 14px; color: var(--atext)">[NĂM]</span><h3 style="font-size: 20px">[BẰNG CẤP / TRƯỜNG]</h3><p style="color: var(--muted); font-size: 15px">[Chuyên ngành]</p></div>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <sc-if value="{{isExp}}" hint-placeholder-val="{{ false }}">
+  <main class="view">
+    <section style="max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 56px; display: flex; flex-direction: column; gap: 18px">
+      <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Kinh nghiệm</span>
+      <h1 style="font-size: clamp(38px, 6vw, 76px); line-height: 1.05; font-weight: 800; max-width: 900px">Những nơi mình đã làm việc</h1>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px)">
+      <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px">
+        <sc-for list="{{experiences}}" as="e" hint-placeholder-count="3">
+          <li class="panel row" style="padding: clamp(24px, 3vw, 36px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 24px">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <span class="mono" style="font-size: 14px; color: var(--atext)">{{e.period}}</span>
+              <h3 style="font-size: 24px">{{e.role}}</h3>
+              <p style="color: var(--muted)">{{e.company}}</p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px">
+              <p style="color: var(--muted)">{{e.text}}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                <sc-for list="{{e.stack}}" as="t" hint-placeholder-count="3"><span class="chip">{{t.name}}</span></sc-for>
+              </div>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ PROJECTS ============ -->
+  <sc-if value="{{isProjects}}" hint-placeholder-val="{{ false }}">
+  <main class="view">
+    <section style="max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 40px; display: flex; flex-direction: column; gap: 18px">
+      <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Dự án</span>
+      <h1 style="font-size: clamp(38px, 6vw, 76px); line-height: 1.05; font-weight: 800; max-width: 900px">Những thứ mình đã xây dựng</h1>
+      <p style="font-size: 19px; color: var(--muted); max-width: 640px">Chọn nhóm để lọc, rồi mở từng dự án để xem bài toán, cách làm và kết quả.</p>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px) 8px">
+      <div role="group" aria-label="Lọc dự án" style="display: flex; flex-wrap: wrap; gap: 10px">
+        <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+          <button class="chip {{f.cls}}" onClick="{{f.pick}}">{{f.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 36px clamp(20px, 4vw, 48px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap: 40px 32px; align-items: start">
+      <sc-for list="{{visible}}" as="p" hint-placeholder-count="6">
+        <button class="card stagger" onClick="{{p.open}}" style="display: flex; flex-direction: column; gap: 18px; width: 100%">
+          <div class="thumb {{p.tcls}}" style="height: 300px; border-radius: 28px; position: relative">
+            <div class="inner" style="position: absolute; inset: 0">
+              <div style="position: absolute; left: 12%; right: 12%; top: 16%; bottom: -8%; border-radius: 20px 20px 0 0; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 24px 50px -24px var(--shadow)">
+                <div style="display: flex; gap: 6px; padding: 14px 16px"><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--line2)"></span><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--line2)"></span><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--line2)"></span></div>
+                <div class="{{p.kcls}}" style="margin: 6px 20px 0; height: 14px; width: 46%; border-radius: 8px"></div>
+                <div style="margin: 14px 20px 0; height: 10px; width: 72%; border-radius: 8px; background: var(--line)"></div>
+                <div style="margin: 10px 20px 0; height: 10px; width: 58%; border-radius: 8px; background: var(--line)"></div>
+                <div style="margin: 20px 20px 0; display: flex; gap: 12px"><div class="{{p.tcls}}" style="flex: 1; height: 60px; border-radius: 14px"></div><div style="flex: 1; height: 60px; border-radius: 14px; background: var(--surface2)"></div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <span class="lang" style="font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase">{{p.catLabel}}</span>
+              <h3 style="font-size: 24px; line-height: 1.2">{{p.title}}</h3>
+              <p style="color: var(--muted); font-size: 15px">{{p.stackText}}</p>
+            </div>
+            <span class="arrow" style="flex: none; width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--line2); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></span>
+          </div>
+        </button>
+      </sc-for>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ PROJECT DETAIL ============ -->
+  <sc-if value="{{isDetail}}" hint-placeholder-val="{{ false }}">
+  <main class="view">
+    <section style="max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 48px; display: flex; flex-direction: column; gap: 18px; align-items: flex-start">
+      <button onClick="{{goProjects}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--muted); font-weight: 500">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"></path></svg>
+        Tất cả dự án
+      </button>
+      <span class="lang" style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase">{{cur.catLabel}}</span>
+      <h1 style="font-size: clamp(36px, 5.6vw, 72px); line-height: 1.06; font-weight: 800; max-width: 900px">{{cur.title}}</h1>
+      <p style="font-size: 19px; color: var(--muted); max-width: 680px">{{cur.blurb}}</p>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 24px">
+      <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Vai trò</span><span style="font-weight: 600">[Vai trò của bạn]</span></div>
+      <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Thời gian</span><span style="font-weight: 600">[Tháng/Năm – Tháng/Năm]</span></div>
+      <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Công nghệ</span><span style="font-weight: 600">{{cur.stackText}}</span></div>
+      <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Liên kết</span><span style="font-weight: 600">[Demo / GitHub]</span></div>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 24px clamp(20px, 4vw, 48px) 0">
+      <div class="{{cur.tcls}}" style="height: clamp(320px, 42vw, 560px); border-radius: 36px; border: 1px solid var(--line); position: relative; overflow: hidden">
+        <div style="position: absolute; left: 14%; right: 14%; top: 12%; bottom: -6%; border-radius: 24px 24px 0 0; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 30px 70px -30px var(--shadow)">
+          <div style="display: flex; gap: 8px; padding: 18px 20px"><span style="width: 11px; height: 11px; border-radius: 50%; background: var(--line2)"></span><span style="width: 11px; height: 11px; border-radius: 50%; background: var(--line2)"></span><span style="width: 11px; height: 11px; border-radius: 50%; background: var(--line2)"></span></div>
+          <div class="{{cur.kcls}}" style="margin: 10px 32px 0; height: 20px; width: 34%; border-radius: 10px"></div>
+          <div style="margin: 20px 32px 0; height: 12px; width: 70%; border-radius: 8px; background: var(--line)"></div>
+          <div style="margin: 12px 32px 0; height: 12px; width: 54%; border-radius: 8px; background: var(--line)"></div>
+          <div style="margin: 32px 32px 0; display: flex; gap: 20px"><div class="{{cur.tcls}}" style="flex: 1; height: 140px; border-radius: 18px"></div><div style="flex: 1; height: 140px; border-radius: 18px; background: var(--surface2)"></div><div class="{{cur.tcls}}" style="flex: 1; height: 140px; border-radius: 18px"></div></div>
+        </div>
+      </div>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 72px clamp(20px, 4vw, 48px) 0; display: flex; flex-direction: column">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px">
+        <sc-for list="{{cur.stack}}" as="t" hint-placeholder-count="3"><span class="chip">{{t.name}}</span></sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding: 30px 0; border-top: 1px solid var(--line)"><span class="mono" style="color: var(--atext)">01</span><div style="display: flex; flex-direction: column; gap: 10px; max-width: 700px"><h3 style="font-size: 26px">Bài toán</h3><p style="color: var(--muted); font-size: 17px">[MÔ TẢ VẤN ĐỀ: người dùng gặp khó khăn gì, mục tiêu của dự án là gì.]</p></div></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding: 30px 0; border-top: 1px solid var(--line)"><span class="mono" style="color: var(--atext)">02</span><div style="display: flex; flex-direction: column; gap: 10px; max-width: 700px"><h3 style="font-size: 26px">Giải pháp</h3><p style="color: var(--muted); font-size: 17px">[MÔ TẢ CÁCH LÀM: kiến trúc, các quyết định kỹ thuật quan trọng, phần bạn phụ trách.]</p></div></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding: 30px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)"><span class="mono" style="color: var(--atext)">03</span><div style="display: flex; flex-direction: column; gap: 10px; max-width: 700px"><h3 style="font-size: 26px">Kết quả</h3><p style="color: var(--muted); font-size: 17px">[KẾT QUẢ THẬT: số liệu, phản hồi hoặc điều đã thay đổi. Bỏ trống nếu chưa có.]</p></div></div>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 40px clamp(20px, 4vw, 48px) 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px">
+      <button class="btn btn-ghost" onClick="{{prevProject}}" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">← Dự án trước</button>
+      <button class="btn btn-main" onClick="{{nextProject}}" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; font-weight: 600">Dự án tiếp theo →</button>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ CONTACT ============ -->
+  <sc-if value="{{isContact}}" hint-placeholder-val="{{ false }}">
+  <main class="view">
+    <section style="max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px) 56px; display: flex; flex-direction: column; gap: 18px">
+      <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atext)">Liên hệ</span>
+      <h1 style="font-size: clamp(38px, 6vw, 76px); line-height: 1.05; font-weight: 800; max-width: 900px">Cùng làm một điều thật hay nhé?</h1>
+      <p style="font-size: 19px; color: var(--muted); max-width: 620px">Kể cho mình nghe về dự án hoặc cơ hội của bạn. Mình đọc mọi lời nhắn và trả lời sớm nhất có thể.</p>
+    </section>
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 56px; align-items: start">
+      <div style="display: flex; flex-direction: column">
+        <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Email</span><span style="font-size: 20px; font-weight: 600">[EMAIL CỦA BẠN]</span></div>
+        <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Điện thoại / Zalo</span><span style="font-size: 20px; font-weight: 600">[SỐ ĐIỆN THOẠI]</span></div>
+        <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: var(--muted)">Địa điểm</span><span style="font-size: 20px; font-weight: 600">[THÀNH PHỐ]</span></div>
+        <div style="padding: 22px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px"><span style="font-size: 14px; color: var(--muted)">Mạng xã hội</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <span class="social chip" style="border-radius: 999px; min-height: 44px">GitHub</span>
+            <span class="social chip" style="border-radius: 999px; min-height: 44px">LinkedIn</span>
+            <span class="social chip" style="border-radius: 999px; min-height: 44px">Facebook</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel" style="padding: 36px; border-radius: 32px; display: flex; flex-direction: column; gap: 22px">
+        <div style="display: flex; flex-direction: column; gap: 8px"><label for="ct-name" style="font-size: 14px; font-weight: 500">Họ và tên</label><input id="ct-name" class="field" type="text" placeholder="Nguyễn Văn A"></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><label for="ct-mail" style="font-size: 14px; font-weight: 500">Email</label><input id="ct-mail" class="field" type="text" placeholder="ban@example.com"></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><label for="ct-sub" style="font-size: 14px; font-weight: 500">Bạn cần giúp gì?</label><input id="ct-sub" class="field" type="text" placeholder="Xây dựng API, ứng dụng web, hợp tác dài hạn…"></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><label for="ct-msg" style="font-size: 14px; font-weight: 500">Lời nhắn</label><textarea id="ct-msg" class="field" rows="5" placeholder="Mô tả ngắn gọn dự án của bạn" style="resize: vertical"></textarea></div>
+        <button class="btn btn-main" style="min-height: 56px; border-radius: 999px; font-weight: 600; font-size: 17px; text-align: center">Gửi lời nhắn</button>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- FOOTER -->
+  <footer style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 48px) 40px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-top: 28px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted)">
+      <span>© [NĂM] Nguyễn Tuấn Vũ. Đã đăng ký bản quyền.</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px 24px">
+        <button onClick="{{goProjects}}" style="min-height: 44px; color: var(--muted)">Dự án</button>
+        <button onClick="{{goAbout}}" style="min-height: 44px; color: var(--muted)">Giới thiệu</button>
+        <button onClick="{{goContact}}" style="min-height: 44px; color: var(--muted)">Liên hệ</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'home', palette: 'violet', pickerOpen: false, filter: 'all', project: 0 };
+  }
+  top() { try { window.scrollTo({ top: 0 }); } catch (e) {} }
+  go(v) { return () => { this.setState({ view: v }); this.top(); }; }
+  art() {
+    const n = 40, f = (a, b, t) => a + (b - a) * t;
+    let d = '';
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1), s = Math.sin(t * Math.PI);
+      const p = [
+        [f(30, 70, t), 690],
+        [f(-90, 560, t), f(570, 90, t) + s * 60],
+        [f(660, 80, t), f(30, 420, t) - s * 40],
+        [f(300, 570, t), f(70, 130, t)]
+      ].map((q) => q[0].toFixed(1) + ' ' + q[1].toFixed(1));
+      d += 'M' + p[0] + ' C' + p[1] + ' ' + p[2] + ' ' + p[3] + ' ';
+    }
+    return d;
+  }
+  renderVals() {
+    const st = this.state, v = st.view;
+    const names = (a) => a.map((n) => ({ name: n }));
+    const cats = { personal: 'Dự án cá nhân', company: 'Dự án công ty', oss: 'Mã nguồn mở' };
+    const raw = [
+      { title: '[TÊN DỰ ÁN CÁ NHÂN 1]', cat: 'personal', stack: ['Next.js', 'Node.js', 'TypeScript'], blurb: '[MÔ TẢ MỘT CÂU: sản phẩm này là gì và dành cho ai.]' },
+      { title: '[TÊN DỰ ÁN CÔNG TY 1]', cat: 'company', stack: ['Angular', 'C#', 'ASP.NET Core'], blurb: '[MÔ TẢ MỘT CÂU: hệ thống này phục vụ nghiệp vụ gì.]' },
+      { title: '[TÊN REPO MÃ NGUỒN MỞ 1]', cat: 'oss', stack: ['C#', '.NET'], blurb: '[MÔ TẢ MỘT CÂU: thư viện hoặc công cụ này giải quyết việc gì.]' },
+      { title: '[TÊN DỰ ÁN CÁ NHÂN 2]', cat: 'personal', stack: ['ReactJS', 'Node.js'], blurb: '[MÔ TẢ MỘT CÂU: sản phẩm này là gì và dành cho ai.]' },
+      { title: '[TÊN DỰ ÁN CÔNG TY 2]', cat: 'company', stack: ['ReactJS', 'C#', 'SQL Server'], blurb: '[MÔ TẢ MỘT CÂU: hệ thống này phục vụ nghiệp vụ gì.]' },
+      { title: '[TÊN REPO MÃ NGUỒN MỞ 2]', cat: 'oss', stack: ['TypeScript', 'Node.js'], blurb: '[MÔ TẢ MỘT CÂU: thư viện hoặc công cụ này giải quyết việc gì.]' }
+    ];
+    const projects = raw.map((p, i) => ({
+      ...p, idx: i,
+      tcls: 't' + (i + 1), kcls: 'k' + (i + 1),
+      catLabel: cats[p.cat], stackText: p.stack.join(' · '), stack: names(p.stack),
+      open: () => { this.setState({ view: 'detail', project: i }); this.top(); }
+    }));
+    const fl = [['all', 'Tất cả'], ['personal', 'Cá nhân'], ['company', 'Công ty'], ['oss', 'Mã nguồn mở']];
+    const pal = [['violet', '#6D4AFF', 'Màu tím'], ['light', 'linear-gradient(135deg, #F5F6F8 50%, #2447F5 50%)', 'Giao diện sáng'], ['blue', '#3B82F6', 'Màu xanh dương'], ['teal', '#14B8A6', 'Màu xanh ngọc'], ['orange', '#F97316', 'Màu cam'], ['pink', '#EC4899', 'Màu hồng']];
+    const n = projects.length, cur = projects[st.project] || projects[0];
+    const nav = [['home', 'Trang chủ'], ['about', 'Giới thiệu'], ['skills', 'Kỹ năng'], ['projects', 'Dự án'], ['exp', 'Kinh nghiệm'], ['contact', 'Liên hệ']];
+    const activeNav = v === 'detail' ? 'projects' : v;
+    const exps = [
+      { period: '[THỜI GIAN]', role: '[CHỨC DANH]', company: '[TÊN CÔNG TY HIỆN TẠI]', text: '[MÔ TẢ 1–2 CÂU: bạn phụ trách phần nào, kết quả chính.]', stack: names(['C#', 'Angular']) },
+      { period: '[THỜI GIAN]', role: '[CHỨC DANH]', company: '[TÊN CÔNG TY TRƯỚC ĐÓ]', text: '[MÔ TẢ 1–2 CÂU: bạn phụ trách phần nào, kết quả chính.]', stack: names(['Node.js', 'ReactJS']) },
+      { period: '[THỜI GIAN]', role: '[CHỨC DANH / DỰ ÁN TỰ DO]', company: '[NƠI LÀM VIỆC]', text: '[MÔ TẢ 1–2 CÂU: bạn phụ trách phần nào, kết quả chính.]', stack: names(['Next.js', 'Node.js']) }
+    ];
+    return {
+      palette: st.palette,
+      pickerOpen: st.pickerOpen,
+      togglePicker: () => this.setState({ pickerOpen: !st.pickerOpen }),
+      currentColor: (pal.find((c) => c[0] === st.palette) || pal[0])[1],
+      palettes: pal.map((c) => ({ label: c[2], color: c[1], cls: st.palette === c[0] ? 'on' : '', pick: () => this.setState({ palette: c[0], pickerOpen: false }) })),
+      isHome: v === 'home', isAbout: v === 'about', isSkills: v === 'skills', isExp: v === 'exp',
+      isProjects: v === 'projects', isDetail: v === 'detail', isContact: v === 'contact',
+      goHome: this.go('home'), goAbout: this.go('about'), goSkills: this.go('skills'), goExp: this.go('exp'),
+      goProjects: () => { this.setState({ view: 'projects', filter: 'all' }); this.top(); },
+      goOss: () => { this.setState({ view: 'projects', filter: 'oss' }); this.top(); },
+      goContact: this.go('contact'),
+      navItems: nav.map((x) => ({ label: x[1], cls: x[0] === activeNav ? 'on' : '', go: this.go(x[0]) })),
+      art: this.art(),
+      stackCards: [
+        { title: 'Backend', k: 1, text: 'Xây dựng API, xử lý nghiệp vụ và dữ liệu cho hệ thống web.', items: names(['C#', '.NET', 'ASP.NET Core', 'Node.js', 'REST API']) },
+        { title: 'Frontend', k: 3, text: 'Dựng giao diện web nhanh, rõ ràng và dễ mở rộng.', items: names(['Angular', 'ReactJS', 'Next.js', 'TypeScript', 'HTML / CSS']) }
+      ],
+      services: [
+        { no: '01', title: 'API và hệ thống backend', text: 'Thiết kế và xây dựng API bằng C# hoặc Node.js, rõ ràng, dễ kiểm thử.' },
+        { no: '02', title: 'Ứng dụng web frontend', text: 'Giao diện bằng Angular, ReactJS hoặc Next.js, từ trang quản trị đến trang công khai.' },
+        { no: '03', title: 'Tối ưu hiệu năng', text: 'Rút ngắn thời gian tải, giảm truy vấn thừa, giữ trải nghiệm mượt trên mọi thiết bị.' },
+        { no: '04', title: 'Mã nguồn sạch, dễ bảo trì', text: 'Cấu trúc rõ ràng, đặt tên nhất quán, có tài liệu để đội ngũ tiếp tục dễ dàng.' }
+      ],
+      featured: projects.slice(0, 3),
+      expShort: exps,
+      experiences: exps,
+      steps: [
+        { no: '01', title: 'Hiểu bài toán', text: 'Làm rõ mục tiêu, người dùng và ràng buộc trước khi viết dòng code đầu tiên.' },
+        { no: '02', title: 'Thiết kế gọn', text: 'Chọn kiến trúc đủ dùng, tránh phức tạp không cần thiết, chia nhỏ để giao sớm.' },
+        { no: '03', title: 'Viết và kiểm thử', text: 'Code dễ đọc, có kiểm thử cho phần quan trọng, review kỹ trước khi hợp nhất.' },
+        { no: '04', title: 'Triển khai và cải tiến', text: 'Theo dõi hiệu năng và lỗi sau khi chạy thật, rồi cải thiện liên tục.' }
+      ],
+      skillGroups: [
+        { name: 'Backend', k: 1, items: names(['C#', '.NET', 'ASP.NET Core', 'Node.js', 'REST API', 'SQL']) },
+        { name: 'Frontend', k: 3, items: names(['Angular', 'ReactJS', 'Next.js', 'TypeScript', 'HTML / CSS', 'Responsive UI']) },
+        { name: 'Công cụ', k: 4, items: names(['Git', 'Postman', 'VS Code', 'Visual Studio']) },
+        { name: 'Cách làm việc', k: 5, items: names(['Clean code', 'Code review', 'Làm việc nhóm', 'Tối ưu hiệu năng']) }
+      ],
+      filters: fl.map((f) => ({ label: f[1], cls: st.filter === f[0] ? 'on' : '', pick: () => this.setState({ filter: f[0] }) })),
+      visible: projects.filter((p) => st.filter === 'all' || p.cat === st.filter),
+      cur,
+      prevProject: () => { this.setState({ project: (st.project + n - 1) % n }); this.top(); },
+      nextProject: () => { this.setState({ project: (st.project + 1) % n }); this.top(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

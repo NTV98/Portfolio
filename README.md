@@ -6,7 +6,7 @@ Portfolio cá nhân song ngữ (Tiếng Việt / English) cho Software Developer
 
 ## Tính năng (dự kiến)
 
-- Home dạng bento, About, Skills, Timeline kinh nghiệm, Projects (tìm kiếm, lọc, trang chi tiết, dự án liên quan), Resume + CV PDF, Blog (MDX, tag, tìm kiếm, highlight code, thời gian đọc), Contact (gửi mail phía server hoặc mailto dự phòng), Privacy, 404.
+- Home (hero + code card, công nghệ, dịch vụ, dự án nổi bật, kinh nghiệm, mã nguồn mở, CTA), About, Skills, Experience, Projects (lọc bằng chip, trang chi tiết, dự án trước/sau), Resume + CV PDF, Blog (MDX, lọc theo tag, highlight code, thời gian đọc), Contact (form soạn email qua mailto), Privacy, 404. Bộ chọn 6 bảng màu.
 - VI/EN với URL theo ngôn ngữ (`/vi`, `/en`) và metadata riêng.
 - Theme Sáng / Tối / Theo hệ thống; responsive điện thoại, tablet, desktop.
 - SEO: metadata, canonical, hreflang, Open Graph, sitemap, robots, JSON-LD.
@@ -50,43 +50,38 @@ Docker image multi-stage (Next standalone, user không phải root) → Docker C
 
 Design system là **nguồn chân lý duy nhất** cho mọi thay đổi giao diện. Đây là bắt buộc, không phải gợi ý.
 
-### Triết lý thiết kế
-**Minimalist + Bento Grid.** Ưu tiên nội dung và typography, khoảng trắng rộng rãi, viền hairline 1px thay cho shadow, một màu accent dùng tiết kiệm, chuyển động tiết chế có mục đích. Dấu ấn riêng: nhãn eyebrow và metadata bằng font mono, lưới chính xác và đồng nhất, icon công nghệ đơn sắc. Không gradient, glow, glassmorphism, thanh % kỹ năng hay trang trí rườm rà.
+### Triết lý thiết kế (v2.0 — theo `Docs/DesignUI/`)
+Giao diện được dựng lại từ thiết kế của chủ dự án (`Docs/DesignUI/Portfolio-html/Main.dc.html` + PDF): **nền tối ánh màu, tiêu đề rất lớn, panel bo tròn 28px viền mảnh, nút và chip dạng pill, một màu nhấn theo bảng màu đang chọn**. Điểm nhấn: hero có đường cong trang trí và code card `developer.ts`, thumbnail dự án là cửa sổ trình duyệt minh hoạ (không ảnh chụp hệ thống công ty), chuyển động "rise" khi vào trang. Mockup chỉ là tham chiếu — mọi giá trị được tái hiện bằng token.
 
-### Quy ước Bento Grid
-- Bento là công cụ layout cho nội dung đa dạng (hero Home, điểm nổi bật About, tóm tắt dự án) — không dùng cho danh sách, bài viết, form hay timeline.
-- 1 cột (điện thoại) → 2 cột (tablet ≥ 768px) → 4 cột (desktop ≥ 1024px), utility `bento`. Chỉ các kích thước `bento-1x1`, `2x1`, `1x2`, `2x2`, `4x1`.
-- Một ô chính `2x2`, ≤ 8 ô, mỗi ô một ý và ≤ 1 CTA, hàng luôn khép kín, thứ tự DOM = thứ tự đọc trên mobile.
-- Chỉ dùng layout đã duyệt trong DESIGN_SYSTEM §7.3; layout mới cần phê duyệt.
-
-### Design token & cấu hình theme
-- Token định nghĩa một lần trong [`src/styles/tokens.css`](src/styles/tokens.css) (khối `@theme` của Tailwind v4 + token layout trong `:root`); base styles và utilities trong [`src/app/globals.css`](src/app/globals.css).
-- **Sáng/tối:** màu khai báo bằng `light-dark()` — tự theo hệ điều hành trước khi JS tải, `next-themes` gắn class `light`/`dark` để ép theme. Component gần như không cần `dark:`.
-- **Palette mặc định của Tailwind đã bị reset** → class như `bg-zinc-500`, `text-2xl` không tồn tại. Chỉ dùng class ngữ nghĩa (`bg-surface`, `text-fg-muted`, `border-border`, `bg-accent`, `text-h1` …). Không hex thô, không giá trị tuỳ ý.
-- Mọi màu chữ đã kiểm chứng tương phản ≥ 4.5:1 ở cả hai theme.
+### Design token & bảng màu
+- Token định nghĩa một lần trong [`src/styles/tokens.css`](src/styles/tokens.css) (khối `@theme` của Tailwind v4 + giá trị thô của từng bảng màu); utility/component class trong [`src/app/globals.css`](src/app/globals.css).
+- **6 bảng màu** qua `<html data-palette>`: `violet` (mặc định khi OS tối), `light` (mặc định khi OS sáng), `blue`, `teal`, `orange`, `pink`. Người xem chọn bằng nút tròn trên header; lựa chọn lưu `localStorage`, áp dụng trước lần vẽ đầu (không nháy màu).
+- **Palette mặc định của Tailwind đã bị reset** → `bg-zinc-500`, `text-2xl` không tồn tại. Chỉ dùng class ngữ nghĩa (`bg-surface`, `text-fg-muted`, `text-accent-text`, `border-line`, `text-h1`, `panel`, `chip` …). Không hex thô, không giá trị tuỳ ý.
+- Font: **Be Vietnam Pro** (thay Poppins của mockup vì Poppins không có subset tiếng Việt) + JetBrains Mono.
+- Mọi màu chữ đã đo tương phản ≥ 5.2:1 ở cả 6 bảng màu (DESIGN_SYSTEM §3.2).
 
 ### Yêu cầu tái sử dụng component
-- Tái sử dụng hoặc mở rộng (variant) component trong `src/components/{ui,bento,layout}` trước khi tạo mới. Không tạo bản gần trùng.
+- Tái sử dụng hoặc mở rộng (variant) component trong `src/components/{ui,layout}` trước khi tạo mới. Không tạo bản gần trùng.
 - Mặc định Server Component; chỉ dùng client component cho tương tác, đặt ở component lá.
 - Không hard-code nội dung trong component — dùng `config/`, `data/`, MDX, `messages/`.
 
 ### Chuẩn responsive
-- Breakpoint mặc định của Tailwind (`sm 640`, `md 768` tablet, `lg 1024` desktop, `xl 1280`).
-- Khoảng cách (gutter, gap, padding card, nhịp section) là **token tự co giãn** theo điện thoại → tablet → desktop; component không phải tự viết breakpoint cho khoảng cách.
+- Layout co giãn bằng `clamp()` và lưới `auto-fit` (`grid-fit-sm/md/lg/xl`) như mockup — rất ít breakpoint. Menu chuyển sang dạng dialog dưới `lg` (1024px).
+- Khoảng cách (gutter, khoảng dưới header, nhịp section) là **token tự co giãn**; component không phải tự viết breakpoint cho khoảng cách.
 - Base CSS đã xử lý sẵn: `100dvh`, safe-area (tai thỏ), chống iOS zoom khi focus input, hover chỉ trên thiết bị có chuột, chống cuộn ngang do URL/code dài.
 - Kiểm tra ở 360, 390, 768, 1024, 1280, 1440px. Không cuộn ngang, không cắt dấu tiếng Việt, vùng chạm ≥ 44px, layout chịu được chữ VI dài hơn EN ~30%.
 
 ### Thêm trang & component một cách nhất quán
 1. Đọc các tài liệu thiết kế bên dưới.
 2. Ghép từ `Container` / `PageHeader` / `Section` và component có sẵn.
-3. Thêm chữ vào cả `messages/vi.json` và `messages/en.json`.
-4. Làm đủ trạng thái empty / error / chưa cấu hình.
-5. Kiểm tra cả 2 theme, 2 ngôn ngữ, mọi breakpoint.
+3. Thêm chữ vào cả `src/messages/vi.ts` và `src/messages/en.ts`.
+4. Làm đủ trạng thái empty / chưa cấu hình.
+5. Kiểm tra bảng màu tối + sáng, 2 ngôn ngữ, mọi breakpoint.
 6. Chạy audit nhất quán (UI_UX_GUIDELINES §12).
 7. Cập nhật tài liệu trong cùng thay đổi nếu quy ước thay đổi.
 
 ### Tài liệu chi tiết
-- [Docs/DESIGN_SYSTEM.md](Docs/DESIGN_SYSTEM.md) — token, màu, typography, khoảng cách, layout, bento, chuyển động, trạng thái
+- [Docs/DESIGN_SYSTEM.md](Docs/DESIGN_SYSTEM.md) — token, 6 bảng màu, typography, khoảng cách, layout từng trang, chuyển động, trạng thái
 - [Docs/UI_UX_GUIDELINES.md](Docs/UI_UX_GUIDELINES.md) — điều hướng, khung trang, trạng thái, form, UX đa ngôn ngữ, accessibility, QA
 - [Docs/COMPONENT_GUIDELINES.md](Docs/COMPONENT_GUIDELINES.md) — catalog component, quy tắc, cấu trúc thư mục
 
@@ -128,7 +123,7 @@ Sau đó: khảo sát component dùng chung hiện có, tái sử dụng token v
 | Q3 | Tên miền | Chưa có → chặn Giai đoạn 8 |
 | Q4 | Gửi mail form liên hệ: Resend / SMTP (Gmail, Zoho…) / chỉ mailto | Mailto trước, Resend sau |
 | Q5 | Cấu hình VPS (RAM/OS), build trên VPS hay qua GitHub Actions + GHCR | Build trên VPS |
-| Q6 | Duyệt màu accent cobalt `#2E4FD6` và font Inter + JetBrains Mono | Như đề xuất |
+| Q6 | ~~Màu & font~~ — **Đã chốt 2026-11-14:** giao diện theo `Docs/DesignUI/`, 6 bảng màu, font Be Vietnam Pro + JetBrains Mono | Đã duyệt |
 | Q7 | Trang tuỳ chọn Uses / Now / Services | Không làm ở v1 |
 | Q8 | Analytics: không / Umami tự host / Plausible | Không |
 | Q9 | `git init`, repo public hay private; làm sạch `.claude/settings*.json` | Init + gitignore settings |
